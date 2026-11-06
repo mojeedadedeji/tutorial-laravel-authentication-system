@@ -182,8 +182,7 @@
 
     <aside class="sidebar" id="sidebar" aria-label="Main navigation">
         <a class="sidebar-brand" href="{{ route('dashboard') }}">
-            <span class="brand-mark">{{ strtoupper(substr(config('app.name'), 0, 1)) }}</span>
-            {{ config('app.name') }}
+            <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" style="height: 2.25rem; width: auto;">
         </a>
 
         <nav class="sidebar-nav">

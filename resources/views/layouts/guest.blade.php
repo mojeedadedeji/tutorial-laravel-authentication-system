@@ -97,6 +97,9 @@
 </head>
 <body>
     <main class="card">
+        <div style="text-align: center; margin-bottom: 1.25rem;">
+            <img src="{{ asset('img/logo.svg') }}" alt="5050 Logistics Limited" style="height: 3rem; width: auto;">
+        </div>
         <h1>@yield('heading')</h1>
 
         @if (session('status'))
