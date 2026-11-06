@@ -46,7 +46,7 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
         <div>
             <h1 class="h3 mb-1 fw-bold">Dashboard</h1>
-            <p class="text-secondary mb-0">Welcome back, {{ auth()->user()->name }} — here's how the hair care market is performing.</p>
+            <p class="text-secondary mb-0">Welcome back, {{ auth()->user()->name }} — here's how logistics operations are performing.</p>
         </div>
         <span class="badge text-bg-light border">{{ now()->format('l, F j, Y') }}</span>
     </div>
@@ -55,11 +55,11 @@
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card kpi-card h-100">
                 <div class="card-body d-flex align-items-center gap-3">
-                    <div class="kpi-icon bg-primary-subtle text-primary">$</div>
+                    <div class="kpi-icon bg-primary-subtle text-primary">▣</div>
                     <div>
-                        <div class="kpi-value">$1.28M</div>
-                        <div class="kpi-label">Market revenue</div>
-                        <div class="kpi-delta delta-up">▲ 12.4% vs last year</div>
+                        <div class="kpi-value">48.6K</div>
+                        <div class="kpi-label">Shipments</div>
+                        <div class="kpi-delta delta-up">▲ 9.7% vs last year</div>
                     </div>
                 </div>
             </div>
@@ -67,11 +67,11 @@
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card kpi-card h-100">
                 <div class="card-body d-flex align-items-center gap-3">
-                    <div class="kpi-icon bg-success-subtle text-success">#</div>
+                    <div class="kpi-icon bg-success-subtle text-success">✓</div>
                     <div>
-                        <div class="kpi-value">84.2K</div>
-                        <div class="kpi-label">Units sold</div>
-                        <div class="kpi-delta delta-up">▲ 8.1% vs last year</div>
+                        <div class="kpi-value">96.2%</div>
+                        <div class="kpi-label">On-time delivery</div>
+                        <div class="kpi-delta delta-up">▲ 1.4 pts</div>
                     </div>
                 </div>
             </div>
@@ -81,9 +81,9 @@
                 <div class="card-body d-flex align-items-center gap-3">
                     <div class="kpi-icon bg-warning-subtle text-warning">%</div>
                     <div>
-                        <div class="kpi-value">23.6%</div>
-                        <div class="kpi-label">Market share</div>
-                        <div class="kpi-delta delta-up">▲ 1.8 pts</div>
+                        <div class="kpi-value">78.4%</div>
+                        <div class="kpi-label">Fleet utilization</div>
+                        <div class="kpi-delta delta-down">▼ 3.1 pts</div>
                     </div>
                 </div>
             </div>
@@ -91,11 +91,11 @@
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card kpi-card h-100">
                 <div class="card-body d-flex align-items-center gap-3">
-                    <div class="kpi-icon bg-info-subtle text-info">↗</div>
+                    <div class="kpi-icon bg-info-subtle text-info">$</div>
                     <div>
-                        <div class="kpi-value">+18.9%</div>
-                        <div class="kpi-label">YoY growth</div>
-                        <div class="kpi-delta delta-down">▼ 2.3 pts vs Q3</div>
+                        <div class="kpi-value">$2.14M</div>
+                        <div class="kpi-label">Freight revenue</div>
+                        <div class="kpi-delta delta-up">▲ 14.2% YoY</div>
                     </div>
                 </div>
             </div>
@@ -107,16 +107,16 @@
             <div class="card panel h-100">
                 <div class="panel-header-custom">
                     <div>
-                        <h2 class="panel-title">Hair care market sales</h2>
-                        <div class="panel-sub">Monthly revenue &amp; units sold — trailing 12 months (dummy data)</div>
+                        <h2 class="panel-title">Logistics performance</h2>
+                        <div class="panel-sub">Monthly shipments &amp; on-time delivery — trailing 12 months (dummy data)</div>
                     </div>
                     <div class="btn-group btn-group-sm" role="group" aria-label="Chart metric">
-                        <button type="button" class="btn btn-outline-primary active" data-metric="revenue">Revenue</button>
-                        <button type="button" class="btn btn-outline-primary" data-metric="units">Units</button>
+                        <button type="button" class="btn btn-outline-primary active" data-metric="shipments">Shipments</button>
+                        <button type="button" class="btn btn-outline-primary" data-metric="ontime">On-time %</button>
                     </div>
                 </div>
                 <div class="chart-wrap">
-                    <canvas id="salesChart" aria-label="Hair care market sales chart" role="img"></canvas>
+                    <canvas id="salesChart" aria-label="Logistics performance chart" role="img"></canvas>
                 </div>
             </div>
         </div>
@@ -125,8 +125,8 @@
             <div class="card panel h-100">
                 <div class="panel-header-custom">
                     <div>
-                        <h2 class="panel-title">Top products</h2>
-                        <div class="panel-sub">By revenue this quarter</div>
+                        <h2 class="panel-title">Busiest lanes</h2>
+                        <div class="panel-sub">By shipment volume this quarter</div>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -134,41 +134,41 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Product</th>
-                                <th scope="col" class="text-end">Revenue</th>
+                                <th scope="col">Lane</th>
+                                <th scope="col" class="text-end">Shipments</th>
                                 <th scope="col" class="text-end">Share</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><span class="rank-badge bg-primary">1</span></td>
-                                <td>HydraRepair Shampoo 500ml</td>
-                                <td class="text-end fw-semibold">$312K</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-primary" style="width: 100%"></div></div><span class="small">24%</span></div></td>
+                                <td>Lagos → Abuja</td>
+                                <td class="text-end fw-semibold">8,420</td>
+                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-primary" style="width: 100%"></div></div><span class="small">22%</span></div></td>
                             </tr>
                             <tr>
                                 <td><span class="rank-badge bg-secondary">2</span></td>
-                                <td>Keratin Smooth Conditioner</td>
-                                <td class="text-end fw-semibold">$268K</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-secondary" style="width: 86%"></div></div><span class="small">21%</span></div></td>
+                                <td>Port Harcourt → Kano</td>
+                                <td class="text-end fw-semibold">6,910</td>
+                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-secondary" style="width: 82%"></div></div><span class="small">18%</span></div></td>
                             </tr>
                             <tr>
                                 <td><span class="rank-badge bg-warning text-dark">3</span></td>
-                                <td>Argan Oil Hair Serum</td>
-                                <td class="text-end fw-semibold">$201K</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-warning" style="width: 64%"></div></div><span class="small">16%</span></div></td>
+                                <td>Ibadan → Lagos</td>
+                                <td class="text-end fw-semibold">5,340</td>
+                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-warning" style="width: 63%"></div></div><span class="small">14%</span></div></td>
                             </tr>
                             <tr>
                                 <td><span class="rank-badge bg-info">4</span></td>
-                                <td>Volume Boost Mousse</td>
-                                <td class="text-end fw-semibold">$154K</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-info" style="width: 49%"></div></div><span class="small">12%</span></div></td>
+                                <td>Enugu → Abuja</td>
+                                <td class="text-end fw-semibold">4,120</td>
+                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-info" style="width: 49%"></div></div><span class="small">11%</span></div></td>
                             </tr>
                             <tr>
                                 <td><span class="rank-badge bg-light text-dark border">5</span></td>
-                                <td>Scalp Detox Exfoliant</td>
-                                <td class="text-end fw-semibold">$118K</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-light" style="width: 38%"></div></div><span class="small">9%</span></div></td>
+                                <td>Benin City → Lagos</td>
+                                <td class="text-end fw-semibold">3,280</td>
+                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-light" style="width: 39%"></div></div><span class="small">9%</span></div></td>
                             </tr>
                         </tbody>
                     </table>
@@ -183,13 +183,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var months = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
-    var revenue = [82, 74, 91, 88, 105, 112, 124, 131, 128, 142, 156, 168];
-    var units = [6.1, 5.4, 6.8, 6.5, 7.9, 8.4, 9.2, 9.8, 9.5, 10.6, 11.7, 12.4];
+    var shipments = [3.4, 3.1, 3.8, 3.6, 4.2, 4.4, 4.9, 5.1, 4.8, 5.3, 5.7, 6.1];
+    var ontime = [93.1, 92.4, 94.0, 93.6, 94.8, 95.1, 95.6, 96.0, 95.4, 96.1, 96.4, 96.2];
 
     var datasets = {
-        revenue: {
-            label: 'Revenue ($K)',
-            data: revenue,
+        shipments: {
+            label: 'Shipments (K)',
+            data: shipments,
             borderColor: '#0d6efd',
             backgroundColor: 'rgba(13, 110, 253, 0.12)',
             fill: true,
@@ -197,9 +197,9 @@ document.addEventListener('DOMContentLoaded', function () {
             pointRadius: 3,
             pointHoverRadius: 6
         },
-        units: {
-            label: 'Units sold (K)',
-            data: units,
+        ontime: {
+            label: 'On-time delivery (%)',
+            data: ontime,
             borderColor: '#198754',
             backgroundColor: 'rgba(25, 135, 84, 0.12)',
             fill: true,
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
         type: 'line',
         data: {
             labels: months,
-            datasets: [datasets.revenue]
+            datasets: [datasets.shipments]
         },
         options: {
             responsive: true,

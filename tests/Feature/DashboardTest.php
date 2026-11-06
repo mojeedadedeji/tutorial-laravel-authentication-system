@@ -25,7 +25,7 @@ class DashboardTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Welcome back, '.$user->name);
-        $response->assertSee('Hair care market sales');
+        $response->assertSee('Logistics performance');
     }
 
     public function test_dashboard_contains_navigation_links(): void
