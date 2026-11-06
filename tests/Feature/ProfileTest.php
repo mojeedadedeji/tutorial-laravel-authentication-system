@@ -34,6 +34,8 @@ class ProfileTest extends TestCase
         $response = $this->actingAs($user)->put('/profile', [
             'name' => 'Updated Name',
             'email' => 'updated@example.com',
+            'phone' => '+234 800 000 0000',
+            'address' => '12 Marina Road, Lagos, Nigeria',
         ]);
 
         $response->assertSessionHasNoErrors();
@@ -41,6 +43,8 @@ class ProfileTest extends TestCase
             'id' => $user->id,
             'name' => 'Updated Name',
             'email' => 'updated@example.com',
+            'phone' => '+234 800 000 0000',
+            'address' => '12 Marina Road, Lagos, Nigeria',
         ]);
     }
 
@@ -55,6 +59,20 @@ class ProfileTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('email');
+    }
+
+    public function test_phone_and_address_are_optional(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->put('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertNull($user->fresh()->phone);
+        $this->assertNull($user->fresh()->address);
     }
 
     public function test_user_can_keep_their_own_email(): void

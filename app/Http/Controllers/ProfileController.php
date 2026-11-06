@@ -36,6 +36,8 @@ class ProfileController extends Controller
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
             ],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'address' => ['nullable', 'string', 'max:1000'],
         ]);
 
         $user->update($validated);
