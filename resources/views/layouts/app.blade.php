@@ -11,48 +11,116 @@
         body {
             margin: 0;
             font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-            background: #f3f4f6;
+            background: #f8fafc;
             color: #111827;
             min-height: 100vh;
         }
-        .topnav {
-            background: #1f2937;
-            color: #f9fafb;
-        }
-        .topnav-inner {
-            max-width: 64rem;
-            margin: 0 auto;
-            padding: 0.75rem 1.5rem;
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 16.5rem;
+            background: #111827;
+            color: #d1d5db;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            z-index: 1030;
         }
-        .brand { font-weight: 600; font-size: 1rem; color: #f9fafb; text-decoration: none; }
-        .nav { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-        .nav a {
+        .sidebar-brand {
+            display: flex; align-items: center; gap: 0.625rem;
+            padding: 1.25rem 1.5rem;
+            color: #f9fafb;
+            font-weight: 700;
+            font-size: 1.0625rem;
+            text-decoration: none;
+            border-bottom: 1px solid rgb(255 255 255 / 0.08);
+        }
+        .sidebar-brand .brand-mark {
+            width: 2rem; height: 2rem;
+            border-radius: 0.5rem;
+            background: #2563eb;
+            color: #fff;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.875rem; font-weight: 700;
+        }
+        .sidebar-nav { flex: 1; padding: 1rem 0.75rem; display: flex; flex-direction: column; gap: 0.125rem; }
+        .sidebar-nav .nav-section {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6b7280;
+            padding: 0.75rem 0.75rem 0.375rem;
+        }
+        .sidebar-nav a, .sidebar-nav button.sidebar-link {
+            display: flex; align-items: center; gap: 0.75rem;
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            border-radius: 0.5rem;
             color: #d1d5db;
             text-decoration: none;
             font-size: 0.875rem;
-        }
-        .nav a:hover { color: #fff; text-decoration: underline; }
-        .nav a[aria-current="page"] { color: #fff; font-weight: 600; }
-        .logout-btn {
             background: none;
-            border: 1px solid #4b5563;
-            color: #d1d5db;
-            border-radius: 0.375rem;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.875rem;
+            border: none;
+            text-align: left;
             cursor: pointer;
         }
-        .logout-btn:hover { color: #fff; border-color: #9ca3af; }
-        main { max-width: 64rem; margin: 0 auto; padding: 2rem 1.5rem; }
+        .sidebar-nav a:hover, .sidebar-nav button.sidebar-link:hover {
+            background: rgb(255 255 255 / 0.07);
+            color: #fff;
+        }
+        .sidebar-nav a[aria-current="page"] {
+            background: #2563eb;
+            color: #fff;
+            font-weight: 600;
+        }
+        .sidebar-nav .nav-icon { width: 1.125rem; text-align: center; flex-shrink: 0; }
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgb(255 255 255 / 0.08);
+        }
+        .sidebar-user { font-size: 0.8125rem; color: #f9fafb; font-weight: 600; }
+        .sidebar-user-email { font-size: 0.75rem; color: #9ca3af; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .sidebar-logout {
+            margin-top: 0.75rem;
+            width: 100%;
+            padding: 0.5rem;
+            background: rgb(255 255 255 / 0.08);
+            border: 1px solid rgb(255 255 255 / 0.15);
+            color: #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.8125rem;
+            cursor: pointer;
+        }
+        .sidebar-logout:hover { background: rgb(255 255 255 / 0.14); color: #fff; }
+
+        /* Mobile toggler */
+        .sidebar-toggler {
+            display: none;
+            position: fixed;
+            top: 0.875rem; left: 0.875rem;
+            z-index: 1040;
+            background: #111827;
+            border: none;
+            color: #fff;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 1.125rem;
+            line-height: 1;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 16.5rem;
+            min-height: 100vh;
+            padding: 2rem 2rem 3rem;
+        }
+
         .card {
             background: #fff;
+            border: 1px solid #e5e7eb;
             border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
             padding: 2rem;
         }
         h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5rem; }
@@ -88,25 +156,60 @@
         }
         .btn:hover { background: #1d4ed8; }
         .btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+        /* Mobile: sidebar becomes offcanvas */
+        @media (max-width: 991.98px) {
+            .sidebar-toggler { display: block; }
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.25s ease;
+            }
+            .sidebar.show { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 4rem 1rem 2rem; }
+            .sidebar-backdrop {
+                position: fixed; inset: 0;
+                background: rgb(0 0 0 / 0.5);
+                z-index: 1020;
+                display: none;
+            }
+            .sidebar-backdrop.show { display: block; }
+        }
     </style>
 </head>
 <body>
-    <header class="topnav">
-        <div class="topnav-inner">
-            <a class="brand" href="{{ route('dashboard') }}">{{ config('app.name') }}</a>
-            <nav class="nav" aria-label="Main navigation">
-                <a href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard')) aria-current="page" @endif>Dashboard</a>
-                <a href="{{ route('password.edit') }}" @if (request()->routeIs('password.edit')) aria-current="page" @endif>Change password</a>
-                <a href="{{ route('profile.edit') }}" @if (request()->routeIs('profile.*')) aria-current="page" @endif>Profile</a>
-                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="logout-btn">Log out</button>
-                </form>
-            </nav>
-        </div>
-    </header>
+    <button type="button" class="sidebar-toggler" id="sidebarToggler" aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">☰</button>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <main>
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+        <a class="sidebar-brand" href="{{ route('dashboard') }}">
+            <span class="brand-mark">{{ strtoupper(substr(config('app.name'), 0, 1)) }}</span>
+            {{ config('app.name') }}
+        </a>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">Menu</div>
+            <a href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard')) aria-current="page" @endif>
+                <span class="nav-icon" aria-hidden="true">▦</span> Dashboard
+            </a>
+            <a href="{{ route('profile.edit') }}" @if (request()->routeIs('profile.*')) aria-current="page" @endif>
+                <span class="nav-icon" aria-hidden="true">◉</span> Profile
+            </a>
+            <a href="{{ route('password.edit') }}" @if (request()->routeIs('password.edit')) aria-current="page" @endif>
+                <span class="nav-icon" aria-hidden="true">⚿</span> Change password
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">{{ auth()->user()->name }}</div>
+            <div class="sidebar-user-email">{{ auth()->user()->email }}</div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="sidebar-logout">Log out</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
         @if (session('status'))
             <div class="alert alert-success" role="status">{{ session('status') }}</div>
         @endif
@@ -123,6 +226,28 @@
 
         @yield('content')
     </main>
+    <script>
+    (function () {
+        var toggler = document.getElementById('sidebarToggler');
+        var sidebar = document.getElementById('sidebar');
+        var backdrop = document.getElementById('sidebarBackdrop');
+        if (!toggler || !sidebar) return;
+
+        function setOpen(open) {
+            sidebar.classList.toggle('show', open);
+            backdrop.classList.toggle('show', open);
+            toggler.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        toggler.addEventListener('click', function () {
+            setOpen(!sidebar.classList.contains('show'));
+        });
+        backdrop.addEventListener('click', function () { setOpen(false); });
+        sidebar.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () { setOpen(false); });
+        });
+    })();
+    </script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}" defer></script>
     @yield('scripts')
 </body>
