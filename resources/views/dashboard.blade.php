@@ -17,9 +17,9 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 1.25rem;
         }
-        .kpi-value { font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
-        .kpi-label { font-size: 0.8125rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.04em; }
-        .kpi-delta { font-size: 0.8125rem; font-weight: 600; }
+        .kpi-value { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
+        .kpi-label { font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.04em; }
+        .kpi-delta { font-size: 0.75rem; font-weight: 600; }
         .delta-up { color: #198754; }
         .delta-down { color: #dc3545; }
         .panel {
