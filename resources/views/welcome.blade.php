@@ -264,8 +264,8 @@
                 <h6>Contact</h6>
                 <ul class="list-unstyled">
                     <li class="mb-2">📍 12 Marina Road, Lagos, Nigeria</li>
-                    <li class="mb-2">📞 +234 800 000 0000</li>
-                    <li class="mb-2">✉️ hello@5050logistics.com</li>
+                    <li class="mb-2">📞 Telephone: +234 706 649 6268</li>
+                    <li class="mb-2">✉️ <a href="mailto:info@fiftyfiftylogistics.com">info@fiftyfiftylogistics.com</a></li>
                 </ul>
             </div>
         </div>
