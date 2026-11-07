@@ -72,6 +72,24 @@
             background: linear-gradient(transparent, rgb(11 31 58 / 0.85));
             color: #fff; font-weight: 600; font-size: 0.875rem;
         }
+        .fleet-brand {
+            position: absolute;
+            top: 0.75rem; right: 0.75rem;
+            height: 1.75rem;
+            background: rgb(11 31 58 / 0.55);
+            border-radius: 0.5rem;
+            padding: 0.2rem 0.55rem;
+            backdrop-filter: blur(4px);
+        }
+        .hero-brand {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            height: 2.25rem;
+            background: rgb(11 31 58 / 0.55);
+            border-radius: 0.625rem;
+            padding: 0.3rem 0.75rem;
+            backdrop-filter: blur(4px);
+        }
         @media (max-width: 991.98px) {
             .fleet-grid { grid-template-columns: repeat(2, 1fr); }
             .hero-img-badge { left: 0; }
@@ -199,6 +217,7 @@
             <div class="col-lg-6">
                 <div class="hero-img-wrap">
                     <img src="{{ asset('img/truck-highway.jpg') }}" alt="5050 Logistics truck on the highway" class="hero-img">
+                    <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" class="hero-brand">
                     <div class="hero-img-badge">
                         <span class="pulse"></span>
                         <div>
@@ -294,18 +313,22 @@
         <div class="fleet-grid">
             <div class="fleet-item">
                 <img src="{{ asset('img/tipper-truck.jpg') }}" alt="Tipper truck" loading="lazy">
+                <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" class="fleet-brand">
                 <div class="fleet-label">Tipper &amp; dump trucks</div>
             </div>
             <div class="fleet-item">
                 <img src="{{ asset('img/truck-highway.jpg') }}" alt="Haulage truck on highway" loading="lazy">
+                <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" class="fleet-brand">
                 <div class="fleet-label">Long-haul freight</div>
             </div>
             <div class="fleet-item">
                 <img src="{{ asset('img/warehouse.jpg') }}" alt="Logistics warehouse" loading="lazy">
+                <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" class="fleet-brand">
                 <div class="fleet-label">Warehousing &amp; cross-dock</div>
             </div>
             <div class="fleet-item">
                 <img src="{{ asset('img/delivery-van.jpg') }}" alt="Delivery van" loading="lazy">
+                <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" class="fleet-brand">
                 <div class="fleet-label">Last-mile delivery</div>
             </div>
         </div>
