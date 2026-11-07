@@ -18,7 +18,10 @@
             <h1 class="h3 mb-1 fw-bold">Shipments</h1>
             <p class="text-secondary mb-0">{{ $shipments->total() }} shipment{{ $shipments->total() === 1 ? '' : 's' }} found</p>
         </div>
-        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm">← Dashboard</a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('shipments.create') }}" class="btn btn-primary btn-sm">+ New shipment</a>
+            <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm">← Dashboard</a>
+        </div>
     </div>
 
     <div class="card filter-card mb-4">

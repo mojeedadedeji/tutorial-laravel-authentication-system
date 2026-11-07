@@ -52,6 +52,13 @@ Route::middleware('auth')->group(function () {
     Route::get('shipments', [ShipmentController::class, 'index'])
         ->name('shipments.index');
 
+    Route::get('shipments/create', [ShipmentController::class, 'create'])
+        ->name('shipments.create');
+
+    Route::post('shipments', [ShipmentController::class, 'store'])
+        ->middleware('throttle:20,1')
+        ->name('shipments.store');
+
     Route::get('profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
