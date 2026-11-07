@@ -186,7 +186,7 @@
 
     <aside class="sidebar" id="sidebar" aria-label="Main navigation">
         <a class="sidebar-brand" href="{{ route('dashboard') }}">
-            <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" style="height: 2.25rem; width: auto;">
+            <img src="{{ asset('img/logo-white.svg') }}" alt="5050 Logistics Limited" style="height: 2.75rem; width: auto;">
         </a>
 
         <nav class="sidebar-nav">

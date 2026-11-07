@@ -17,7 +17,7 @@
         }
         body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1f2937; }
         .navbar-custom { background: rgba(11, 31, 58, 0.97); padding: 0.875rem 0; }
-        .navbar-custom .navbar-brand img { height: 2.5rem; }
+        .navbar-custom .navbar-brand img { height: 3rem; }
         .nav-link-custom { color: #cbd5e1 !important; font-weight: 500; font-size: 0.9375rem; }
         .nav-link-custom:hover { color: #fff !important; }
         .btn-quote { background: var(--accent); border-color: var(--accent); color: #111827; font-weight: 600; }
@@ -155,7 +155,7 @@
         footer a { color: #cbd5e1; text-decoration: none; }
         footer a:hover { color: #fff; }
         footer h6 { color: #fff; font-weight: 700; margin-bottom: 1rem; }
-        footer .footer-logo { height: 2.25rem; margin-bottom: 1rem; }
+        footer .footer-logo { height: 2.75rem; margin-bottom: 1rem; }
 
         @media (max-width: 991.98px) {
             .hero { padding: 4rem 0 3.5rem; }
