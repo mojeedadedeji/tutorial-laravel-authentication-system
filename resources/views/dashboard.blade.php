@@ -9,8 +9,11 @@
             border-radius: 1rem;
             box-shadow: 0 1px 3px rgb(0 0 0 / 0.08), 0 4px 12px rgb(0 0 0 / 0.05);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
+            color: inherit;
+            text-decoration: none;
+            display: block;
         }
-        .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgb(0 0 0 / 0.12); }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgb(0 0 0 / 0.12); color: inherit; }
         .kpi-icon {
             width: 3rem; height: 3rem;
             border-radius: 0.75rem;
@@ -22,6 +25,7 @@
         .kpi-delta { font-size: 0.75rem; font-weight: 600; }
         .delta-up { color: #198754; }
         .delta-down { color: #dc3545; }
+        .delta-flat { color: #6c757d; }
         .panel {
             border: none;
             border-radius: 1rem;
@@ -40,6 +44,8 @@
             display: inline-flex; align-items: center; justify-content: center;
             font-size: 0.75rem; font-weight: 700; color: #fff;
         }
+        .lane-row { cursor: pointer; }
+        .lane-row:hover { background: #f8fafc; }
         @media (max-width: 768px) { .chart-wrap { height: 260px; } }
     </style>
 
@@ -53,52 +59,76 @@
 
     <div class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card kpi-card h-100">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="kpi-icon bg-primary-subtle text-primary">▣</div>
-                    <div>
-                        <div class="kpi-value">48.6K</div>
-                        <div class="kpi-label">Shipments</div>
-                        <div class="kpi-delta delta-up">▲ 9.7% vs last year</div>
+            <a href="{{ route('shipments.index') }}" class="text-decoration-none text-reset">
+                <div class="card kpi-card h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-primary-subtle text-primary">▣</div>
+                        <div>
+                            <div class="kpi-value">{{ number_format($kpis['shipments']) }}</div>
+                            <div class="kpi-label">Shipments this month</div>
+                            @if ($kpis['shipments_delta'] !== null)
+                                <div class="kpi-delta {{ $kpis['shipments_delta'] >= 0 ? 'delta-up' : 'delta-down' }}">
+                                    {{ $kpis['shipments_delta'] >= 0 ? '▲' : '▼' }} {{ abs($kpis['shipments_delta']) }}% vs last month
+                                </div>
+                            @else
+                                <div class="kpi-delta delta-flat">No prior-month data</div>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card kpi-card h-100">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="kpi-icon bg-success-subtle text-success">✓</div>
-                    <div>
-                        <div class="kpi-value">96.2%</div>
-                        <div class="kpi-label">On-time delivery</div>
-                        <div class="kpi-delta delta-up">▲ 1.4 pts</div>
+            <a href="{{ route('shipments.index', ['status' => 'delivered']) }}" class="text-decoration-none text-reset">
+                <div class="card kpi-card h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-success-subtle text-success">✓</div>
+                        <div>
+                            <div class="kpi-value">{{ $kpis['ontime'] }}%</div>
+                            <div class="kpi-label">On-time delivery</div>
+                            <div class="kpi-delta {{ $kpis['ontime_delta'] >= 0 ? 'delta-up' : 'delta-down' }}">
+                                {{ $kpis['ontime_delta'] >= 0 ? '▲' : '▼' }} {{ abs($kpis['ontime_delta']) }} pts vs last month
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card kpi-card h-100">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="kpi-icon bg-warning-subtle text-warning">%</div>
-                    <div>
-                        <div class="kpi-value">78.4%</div>
-                        <div class="kpi-label">Fleet utilization</div>
-                        <div class="kpi-delta delta-down">▼ 3.1 pts</div>
+            <a href="{{ route('shipments.index', ['status' => 'in_transit']) }}" class="text-decoration-none text-reset">
+                <div class="card kpi-card h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-warning-subtle text-warning">🚚</div>
+                        <div>
+                            <div class="kpi-value">{{ number_format($kpis['in_transit']) }}</div>
+                            <div class="kpi-label">In transit now</div>
+                            <div class="kpi-delta {{ $kpis['delayed'] > 0 ? 'delta-down' : 'delta-flat' }}">
+                                {{ $kpis['delayed'] }} delayed
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card kpi-card h-100">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="kpi-icon bg-info-subtle text-info">$</div>
-                    <div>
-                        <div class="kpi-value">$2.14M</div>
-                        <div class="kpi-label">Freight revenue</div>
-                        <div class="kpi-delta delta-up">▲ 14.2% YoY</div>
+            <a href="{{ route('shipments.index') }}" class="text-decoration-none text-reset">
+                <div class="card kpi-card h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-info-subtle text-info">$</div>
+                        <div>
+                            <div class="kpi-value">₦{{ number_format($kpis['revenue'] / 1500, 1) }}K</div>
+                            <div class="kpi-label">Freight revenue (mo)</div>
+                            @if ($kpis['revenue_delta'] !== null)
+                                <div class="kpi-delta {{ $kpis['revenue_delta'] >= 0 ? 'delta-up' : 'delta-down' }}">
+                                    {{ $kpis['revenue_delta'] >= 0 ? '▲' : '▼' }} {{ abs($kpis['revenue_delta']) }}% vs last month
+                                </div>
+                            @else
+                                <div class="kpi-delta delta-flat">No prior-month data</div>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -108,7 +138,7 @@
                 <div class="panel-header-custom">
                     <div>
                         <h2 class="panel-title">Logistics performance</h2>
-                        <div class="panel-sub">Monthly shipments &amp; on-time delivery — trailing 12 months (dummy data)</div>
+                        <div class="panel-sub">Monthly shipments &amp; on-time delivery — trailing 12 months</div>
                     </div>
                     <div class="btn-group btn-group-sm" role="group" aria-label="Chart metric">
                         <button type="button" class="btn btn-outline-primary active" data-metric="shipments">Shipments</button>
@@ -126,8 +156,9 @@
                 <div class="panel-header-custom">
                     <div>
                         <h2 class="panel-title">Busiest lanes</h2>
-                        <div class="panel-sub">By shipment volume this quarter</div>
+                        <div class="panel-sub">By shipment volume — last 90 days</div>
                     </div>
+                    <a href="{{ route('shipments.index') }}" class="small">View all</a>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -140,36 +171,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><span class="rank-badge bg-primary">1</span></td>
-                                <td>Lagos → Abuja</td>
-                                <td class="text-end fw-semibold">8,420</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-primary" style="width: 100%"></div></div><span class="small">22%</span></div></td>
-                            </tr>
-                            <tr>
-                                <td><span class="rank-badge bg-secondary">2</span></td>
-                                <td>Port Harcourt → Kano</td>
-                                <td class="text-end fw-semibold">6,910</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-secondary" style="width: 82%"></div></div><span class="small">18%</span></div></td>
-                            </tr>
-                            <tr>
-                                <td><span class="rank-badge bg-warning text-dark">3</span></td>
-                                <td>Ibadan → Lagos</td>
-                                <td class="text-end fw-semibold">5,340</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-warning" style="width: 63%"></div></div><span class="small">14%</span></div></td>
-                            </tr>
-                            <tr>
-                                <td><span class="rank-badge bg-info">4</span></td>
-                                <td>Enugu → Abuja</td>
-                                <td class="text-end fw-semibold">4,120</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-info" style="width: 49%"></div></div><span class="small">11%</span></div></td>
-                            </tr>
-                            <tr>
-                                <td><span class="rank-badge bg-light text-dark border">5</span></td>
-                                <td>Benin City → Lagos</td>
-                                <td class="text-end fw-semibold">3,280</td>
-                                <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar bg-light" style="width: 39%"></div></div><span class="small">9%</span></div></td>
-                            </tr>
+                            @forelse ($topLanes as $i => $lane)
+                                @php $share = round($lane->total / $laneTotal * 100); @endphp
+                                <tr class="lane-row" onclick="window.location='{{ route('shipments.index', ['origin' => $lane->origin, 'destination' => $lane->destination]) }}'">
+                                    <td><span class="rank-badge {{ $i === 0 ? 'bg-primary' : ($i === 1 ? 'bg-secondary' : ($i === 2 ? 'bg-warning text-dark' : 'bg-light text-dark border')) }}">{{ $i + 1 }}</span></td>
+                                    <td>{{ $lane->origin }} → {{ $lane->destination }}</td>
+                                    <td class="text-end fw-semibold">{{ number_format($lane->total) }}</td>
+                                    <td class="text-end"><div class="d-flex align-items-center justify-content-end gap-2"><div class="progress flex-grow-1" style="max-width: 4rem;"><div class="progress-bar {{ $i === 0 ? 'bg-primary' : ($i === 1 ? 'bg-secondary' : 'bg-info') }}" style="width: {{ $share }}%"></div></div><span class="small">{{ $share }}%</span></div></td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="4" class="text-center text-secondary py-4">No shipments yet.</td></tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -183,13 +195,13 @@
 <script src="{{ asset('vendor/chartjs/chart.umd.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var months = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
-    var shipments = [3.4, 3.1, 3.8, 3.6, 4.2, 4.4, 4.9, 5.1, 4.8, 5.3, 5.7, 6.1];
-    var ontime = [93.1, 92.4, 94.0, 93.6, 94.8, 95.1, 95.6, 96.0, 95.4, 96.1, 96.4, 96.2];
+    var months = @json($chartLabels);
+    var shipments = @json($chartShipments);
+    var ontime = @json($chartOnTime);
 
     var datasets = {
         shipments: {
-            label: 'Shipments (K)',
+            label: 'Shipments',
             data: shipments,
             borderColor: '#0d6efd',
             backgroundColor: 'rgba(13, 110, 253, 0.12)',

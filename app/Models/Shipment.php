@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+#[Fillable(['user_id', 'reference', 'origin', 'destination', 'status', 'weight_kg', 'amount', 'shipped_at', 'delivered_at'])]
+class Shipment extends Model
+{
+    /** @use HasFactory<\Database\Factories\ShipmentFactory> */
+    use HasFactory;
+
+    public const STATUSES = ['pending', 'in_transit', 'delivered', 'delayed', 'cancelled'];
+
+    /**
+     * Get the user that owns the shipment.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'weight_kg' => 'decimal:2',
+            'amount' => 'decimal:2',
+            'shipped_at' => 'datetime',
+            'delivered_at' => 'datetime',
+        ];
+    }
+}

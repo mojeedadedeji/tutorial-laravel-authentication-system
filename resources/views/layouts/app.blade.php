@@ -194,6 +194,9 @@
             <a href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard')) aria-current="page" @endif>
                 <span class="nav-icon" aria-hidden="true">▦</span> Dashboard
             </a>
+            <a href="{{ route('shipments.index') }}" @if (request()->routeIs('shipments.*')) aria-current="page" @endif>
+                <span class="nav-icon" aria-hidden="true">🚚</span> Shipments
+            </a>
             <a href="{{ route('profile.edit') }}" @if (request()->routeIs('profile.*')) aria-current="page" @endif>
                 <span class="nav-icon" aria-hidden="true">◉</span> Profile
             </a>
