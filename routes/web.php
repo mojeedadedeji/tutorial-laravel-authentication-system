@@ -54,6 +54,9 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('profile.update');
 
+    Route::get('delete-account', [ProfileController::class, 'confirmDelete'])
+        ->name('account.delete');
+
     Route::delete('profile', [ProfileController::class, 'destroy'])
         ->middleware('throttle:6,1')
         ->name('profile.destroy');

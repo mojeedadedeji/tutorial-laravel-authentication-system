@@ -75,6 +75,21 @@ class ProfileTest extends TestCase
         $this->assertNull($user->fresh()->address);
     }
 
+    public function test_delete_account_page_requires_authentication(): void
+    {
+        $this->get('/delete-account')->assertRedirect(route('login'));
+    }
+
+    public function test_delete_account_page_renders_for_authenticated_users(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/delete-account');
+
+        $response->assertStatus(200);
+        $response->assertSee('Delete account');
+    }
+
     public function test_user_can_delete_their_account_with_password(): void
     {
         $user = User::factory()->create();

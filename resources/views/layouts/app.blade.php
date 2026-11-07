@@ -75,6 +75,9 @@
             color: #fff;
             font-weight: 600;
         }
+        .sidebar-nav a.nav-danger { color: #fca5a5; }
+        .sidebar-nav a.nav-danger:hover { background: rgb(220 38 38 / 0.2); color: #fecaca; }
+        .sidebar-nav a.nav-danger[aria-current="page"] { background: #dc2626; color: #fff; }
         .sidebar-nav .nav-icon { width: 1.125rem; text-align: center; flex-shrink: 0; }
         .sidebar-footer {
             padding: 1rem 1.5rem;
@@ -196,6 +199,9 @@
             </a>
             <a href="{{ route('password.edit') }}" @if (request()->routeIs('password.edit')) aria-current="page" @endif>
                 <span class="nav-icon" aria-hidden="true">⚿</span> Change password
+            </a>
+            <a href="{{ route('account.delete') }}" class="nav-danger" @if (request()->routeIs('account.delete')) aria-current="page" @endif>
+                <span class="nav-icon" aria-hidden="true">✕</span> Delete account
             </a>
         </nav>
 

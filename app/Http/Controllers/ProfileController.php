@@ -47,6 +47,14 @@ class ProfileController extends Controller
     }
 
     /**
+     * Show the delete account confirmation page.
+     */
+    public function confirmDelete(): View
+    {
+        return view('account.delete');
+    }
+
+    /**
      * Delete the user's account after password confirmation.
      */
     public function destroy(Request $request): RedirectResponse
