@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Shipment;
 use App\Models\User;
+use App\Models\Vehicle;
+use App\Notifications\ShipmentStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -43,6 +45,7 @@ class AdminController extends Controller
         return view('admin.shipments', [
             'shipments' => $shipments,
             'statuses' => Shipment::STATUSES,
+            'vehicles' => Vehicle::orderBy('name')->get(),
         ]);
     }
 
@@ -53,14 +56,22 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'status' => ['required', 'string', 'in:' . implode(',', Shipment::STATUSES)],
+            'vehicle_id' => ['nullable', 'integer', 'exists:vehicles,id'],
         ]);
+
+        $oldStatus = $shipment->status;
 
         $shipment->update([
             'status' => $validated['status'],
+            'vehicle_id' => $validated['vehicle_id'] ?? $shipment->vehicle_id,
             'delivered_at' => $validated['status'] === 'delivered' && ! $shipment->delivered_at
                 ? now()
                 : $shipment->delivered_at,
         ]);
+
+        if ($oldStatus !== $shipment->status) {
+            $shipment->user->notify(new ShipmentStatusUpdated($shipment));
+        }
 
         return back()->with('status', 'Shipment status updated.');
     }

@@ -54,6 +54,29 @@ class AdminFleetBlogPaymentTest extends TestCase
         $this->assertSame('delivered', $shipment->fresh()->status);
     }
 
+    public function test_admin_status_update_assigns_vehicle_and_notifies_customer(): void
+    {
+        \Illuminate\Support\Facades\Notification::fake();
+
+        $admin = $this->admin();
+        $vehicle = Vehicle::create(['name' => 'Van 7', 'type' => 'van', 'status' => 'available']);
+        $shipment = Shipment::factory()->create(['status' => 'pending']);
+
+        $this->actingAs($admin)->patch("/admin/shipments/{$shipment->id}/status", [
+            'status' => 'in_transit',
+            'vehicle_id' => $vehicle->id,
+        ])->assertRedirect();
+
+        $shipment->refresh();
+        $this->assertSame('in_transit', $shipment->status);
+        $this->assertSame($vehicle->id, $shipment->vehicle_id);
+
+        \Illuminate\Support\Facades\Notification::assertSentTo(
+            $shipment->user,
+            \App\Notifications\ShipmentStatusUpdated::class,
+        );
+    }
+
     public function test_admin_can_list_users_and_toggle_admin(): void
     {
         $admin = $this->admin();

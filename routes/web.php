@@ -104,6 +104,9 @@ Route::middleware('auth')->group(function () {
     Route::post('shipments/{shipment}/pay', [PaymentController::class, 'store'])
         ->name('shipments.pay');
 
+    Route::get('payments/callback', [PaymentController::class, 'callback'])
+        ->name('payments.callback');
+
     Route::get('profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 

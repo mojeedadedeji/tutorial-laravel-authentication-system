@@ -46,18 +46,25 @@
     <div class="card" style="border: none; border-radius: 1rem; box-shadow: 0 1px 3px rgb(0 0 0 / 0.08), 0 4px 12px rgb(0 0 0 / 0.05);">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead><tr><th>Reference</th><th>Customer</th><th>Route</th><th>Status</th><th class="text-end">Amount</th><th>Update</th></tr></thead>
+                <thead><tr><th>Reference</th><th>Customer</th><th>Route</th><th>Vehicle</th><th>Status</th><th class="text-end">Amount</th><th>Update</th></tr></thead>
                 <tbody>
                     @forelse ($shipments as $s)
                         <tr>
                             <td class="fw-semibold">{{ $s->reference }}</td>
                             <td>{{ $s->user->name }}<br><small class="text-secondary">{{ $s->user->email }}</small></td>
                             <td>{{ $s->origin }} → {{ $s->destination }}</td>
+                            <td>{{ $s->vehicle?->name ?? '—' }}</td>
                             <td><span class="status-badge status-{{ $s->status }}">{{ ucfirst(str_replace('_', ' ', $s->status)) }}</span></td>
                             <td class="text-end">₦{{ number_format($s->amount) }}</td>
                             <td>
                                 <form method="POST" action="{{ route('admin.shipments.status', $s) }}" class="d-flex gap-1">
                                     @csrf @method('PATCH')
+                                    <select name="vehicle_id" class="form-select form-select-sm" style="width:auto;" title="Assign vehicle" onchange="this.form.submit()">
+                                        <option value="">No vehicle</option>
+                                        @foreach ($vehicles as $v)
+                                            <option value="{{ $v->id }}" @selected($s->vehicle_id === $v->id)>{{ $v->name }}</option>
+                                        @endforeach
+                                    </select>
                                     <select name="status" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
                                         @foreach ($statuses as $st)
                                             <option value="{{ $st }}" @selected($s->status === $st)>{{ ucfirst(str_replace('_', ' ', $st)) }}</option>
@@ -67,7 +74,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center text-secondary py-5">No shipments found.</td></tr>
+                        <tr><td colspan="7" class="text-center text-secondary py-5">No shipments found.</td></tr>
                     @endforelse
                 </tbody>
             </table>
