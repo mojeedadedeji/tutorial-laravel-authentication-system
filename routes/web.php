@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -67,6 +68,16 @@ Route::middleware('auth')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])
         ->middleware('throttle:6,1')
         ->name('password.change');
+
+    Route::get('payment-methods', [PaymentMethodController::class, 'index'])
+        ->name('payment-methods.index');
+
+    Route::post('payment-methods', [PaymentMethodController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('payment-methods.store');
+
+    Route::delete('payment-methods/{paymentMethod}', [PaymentMethodController::class, 'destroy'])
+        ->name('payment-methods.destroy');
 });
 
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])

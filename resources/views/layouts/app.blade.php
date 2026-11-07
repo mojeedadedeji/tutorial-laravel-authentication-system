@@ -200,6 +200,9 @@
             <a href="{{ route('password.edit') }}" @if (request()->routeIs('password.edit')) aria-current="page" @endif>
                 <span class="nav-icon" aria-hidden="true">⚿</span> Change password
             </a>
+            <a href="{{ route('payment-methods.index') }}" @if (request()->routeIs('payment-methods.*')) aria-current="page" @endif>
+                <span class="nav-icon" aria-hidden="true">💳</span> Payment methods
+            </a>
             <a href="{{ route('account.delete') }}" class="nav-danger" @if (request()->routeIs('account.delete')) aria-current="page" @endif>
                 <span class="nav-icon" aria-hidden="true">✕</span> Delete account
             </a>
