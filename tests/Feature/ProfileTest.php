@@ -75,6 +75,38 @@ class ProfileTest extends TestCase
         $this->assertNull($user->fresh()->address);
     }
 
+    public function test_user_can_delete_their_account_with_password(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->delete('/profile', [
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect(route('home'));
+        $this->assertGuest();
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    public function test_account_deletion_requires_correct_password(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->delete('/profile', [
+            'password' => 'wrong-password',
+        ]);
+
+        $response->assertSessionHasErrors('password');
+        $this->assertAuthenticated();
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
+    }
+
+    public function test_guests_cannot_delete_accounts(): void
+    {
+        $this->delete('/profile', ['password' => 'password'])
+            ->assertRedirect(route('login'));
+    }
+
     public function test_user_can_keep_their_own_email(): void
     {
         $user = User::factory()->create();

@@ -54,6 +54,10 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('profile.update');
 
+    Route::delete('profile', [ProfileController::class, 'destroy'])
+        ->middleware('throttle:6,1')
+        ->name('profile.destroy');
+
     Route::get('password', [PasswordController::class, 'edit'])
         ->name('password.edit');
 

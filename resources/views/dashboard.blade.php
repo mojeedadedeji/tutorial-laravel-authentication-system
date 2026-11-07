@@ -176,6 +176,33 @@
             </div>
         </div>
     </div>
+
+    <div class="row g-3 mt-1">
+        <div class="col-12">
+            <div class="card panel">
+                <div class="panel-header-custom">
+                    <div>
+                        <h2 class="panel-title text-danger">Danger zone</h2>
+                        <div class="panel-sub">Once you delete your account, there is no going back.</div>
+                    </div>
+                </div>
+                <div class="p-3 pt-0" style="padding: 0 1.5rem 1.5rem;">
+                    <form method="POST" action="{{ route('profile.destroy') }}" class="d-flex flex-wrap align-items-end gap-3" onsubmit="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">
+                        @csrf
+                        @method('DELETE')
+                        <div style="flex: 1; min-width: 14rem; max-width: 22rem;">
+                            <label for="delete-password" class="form-label small fw-semibold mb-1">Confirm your password to delete account</label>
+                            <input type="password" class="form-control" id="delete-password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+                            @error('password')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-danger">Delete account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
