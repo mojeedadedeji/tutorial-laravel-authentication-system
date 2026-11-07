@@ -95,6 +95,21 @@
             font-size: 0.8125rem; font-weight: 600; color: #e2e8f0;
             margin-bottom: 1.5rem;
         }
+        .store-badges { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.75rem; }
+        .store-badge {
+            display: inline-flex; align-items: center; gap: 0.625rem;
+            background: #111827; color: #fff;
+            border: 1px solid rgb(255 255 255 / 0.15);
+            border-radius: 0.625rem;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .store-badge:hover { background: #1f2937; transform: translateY(-2px); color: #fff; }
+        .store-badge svg { width: 1.5rem; height: 1.5rem; flex-shrink: 0; }
+        .store-badge .sb-text { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+        .store-badge .sb-small { font-size: 0.625rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.04em; }
+        .store-badge .sb-big { font-size: 0.9375rem; font-weight: 700; }
         .hero-stats { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-top: 3rem; }
         .hero-stat .num { font-size: 2rem; font-weight: 800; color: #fff; }
         .hero-stat .lbl { font-size: 0.8125rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -188,6 +203,22 @@
                         <a href="{{ route('register') }}" class="btn btn-quote btn-lg px-4">Get a quote</a>
                         <a href="#services" class="btn btn-outline-light-custom btn-lg px-4">Our services</a>
                     @endauth
+                </div>
+                <div class="store-badges">
+                    <a href="#" class="store-badge" aria-label="Download on the App Store">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8.98-.2 1.92-.86 3.24-.77 1.38.12 2.42.65 3.1 1.65-2.84 1.7-2.37 5.47.48 6.53-.57 1.5-1.31 2.99-2.9 4.76zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                        <span class="sb-text">
+                            <span class="sb-small">Download on the</span>
+                            <span class="sb-big">App Store</span>
+                        </span>
+                    </a>
+                    <a href="#" class="store-badge" aria-label="Get it on Google Play">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8 13.7 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1zm11.5 8.3L5.9 1.2l11.2 6.4-1.9 2.5zm0 3.8 1.9 2.5-11.2 6.4 9.3-8.9zm2.3-1.9 3.1 1.8c.9.5.9 1.6 0 2.1l-3.1 1.8-2.2-2.9 2.2-2.8z"/></svg>
+                        <span class="sb-text">
+                            <span class="sb-small">Get it on</span>
+                            <span class="sb-big">Google Play</span>
+                        </span>
+                    </a>
                 </div>
                 <div class="hero-stats">
                     <div class="hero-stat"><div class="num">48K+</div><div class="lbl">Shipments / month</div></div>
