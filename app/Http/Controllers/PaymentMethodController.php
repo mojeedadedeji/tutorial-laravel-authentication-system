@@ -32,15 +32,18 @@ class PaymentMethodController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'brand' => ['required', 'string', 'max:20'],
+            'type' => ['required', 'string', 'in:' . implode(',', PaymentMethod::TYPES)],
+            'brand' => ['nullable', 'string', 'max:20'],
             'cardholder_name' => ['required', 'string', 'max:255'],
-            'card_number' => ['required', 'string', 'regex:/^[0-9]{13,19}$/'],
-            'expiry_month' => ['required', 'integer', 'min:1', 'max:12'],
-            'expiry_year' => ['required', 'integer', 'min:' . date('Y'), 'max:' . (date('Y') + 20)],
+            'card_number' => ['nullable', 'required_if:type,card', 'string', 'regex:/^[0-9]{13,19}$/'],
+            'expiry_month' => ['nullable', 'required_if:type,card', 'integer', 'min:1', 'max:12'],
+            'expiry_year' => ['nullable', 'required_if:type,card', 'integer', 'min:' . date('Y'), 'max:' . (date('Y') + 20)],
             'is_default' => ['nullable', 'boolean'],
         ]);
 
-        DB::transaction(function () use ($request, $validated) {
+        $isCard = $validated['type'] === 'card';
+
+        DB::transaction(function () use ($request, $validated, $isCard) {
             $isDefault = $request->boolean('is_default')
                 || ! $request->user()->paymentMethods()->exists();
 
@@ -49,11 +52,12 @@ class PaymentMethodController extends Controller
             }
 
             $request->user()->paymentMethods()->create([
-                'brand' => $validated['brand'],
+                'type' => $validated['type'],
+                'brand' => $validated['brand'] ?? $validated['type'],
                 'cardholder_name' => $validated['cardholder_name'],
-                'last4' => substr($validated['card_number'], -4),
-                'expiry_month' => $validated['expiry_month'],
-                'expiry_year' => $validated['expiry_year'],
+                'last4' => $isCard ? substr($validated['card_number'], -4) : '----',
+                'expiry_month' => $isCard ? $validated['expiry_month'] : null,
+                'expiry_year' => $isCard ? $validated['expiry_year'] : null,
                 'is_default' => $isDefault,
             ]);
         });

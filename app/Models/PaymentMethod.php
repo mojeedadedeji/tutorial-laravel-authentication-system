@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'brand', 'last4', 'expiry_month', 'expiry_year', 'cardholder_name', 'is_default'])]
+#[Fillable(['user_id', 'type', 'brand', 'last4', 'expiry_month', 'expiry_year', 'cardholder_name', 'is_default'])]
 class PaymentMethod extends Model
 {
+    public const TYPES = ['card', 'paystack', 'opay'];
+
     /**
      * Get the user that owns the payment method.
      */

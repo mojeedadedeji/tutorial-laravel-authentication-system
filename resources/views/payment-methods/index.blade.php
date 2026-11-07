@@ -20,13 +20,21 @@
                             <li class="d-flex align-items-center justify-content-between" style="border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.875rem 1rem;">
                                 <div>
                                     <div class="fw-semibold">
-                                        {{ ucfirst($method->brand) }} •••• {{ $method->last4 }}
+                                        @if ($method->type === 'paystack') Paystack
+                                        @elseif ($method->type === 'opay') OPay
+                                        @else {{ ucfirst($method->brand) }} •••• {{ $method->last4 }}
+                                        @endif
                                         @if ($method->is_default)
                                             <span class="badge bg-primary ms-1">Default</span>
                                         @endif
                                     </div>
                                     <div class="small muted">
-                                        {{ $method->cardholder_name }} · Expires {{ str_pad($method->expiry_month, 2, '0', STR_PAD_LEFT) }}/{{ $method->expiry_year }}
+                                        {{ $method->cardholder_name }}
+                                        @if ($method->type === 'card')
+                                            · Expires {{ str_pad($method->expiry_month, 2, '0', STR_PAD_LEFT) }}/{{ $method->expiry_year }}
+                                        @else
+                                            · {{ ucfirst($method->type) }} account
+                                        @endif
                                     </div>
                                 </div>
                                 <form method="POST" action="{{ route('payment-methods.destroy', $method) }}" onsubmit="return confirm('Remove this payment method?');">
@@ -48,6 +56,16 @@
                     @csrf
 
                     <div class="field">
+                        <label for="type">Payment type</label>
+                        <select id="type" name="type" required>
+                            <option value="card" @selected(old('type', 'card') === 'card')>Debit / Credit card</option>
+                            <option value="paystack" @selected(old('type') === 'paystack')>Paystack</option>
+                            <option value="opay" @selected(old('type') === 'opay')>OPay</option>
+                        </select>
+                        @error('type')<div class="text-danger" style="font-size: 0.8125rem; margin-top: 0.25rem;">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="field" id="card-fields">
                         <label for="brand">Card brand</label>
                         <select id="brand" name="brand" required>
                             <option value="visa" @selected(old('brand') === 'visa')>Visa</option>
@@ -65,14 +83,14 @@
                         @error('cardholder_name')<div class="text-danger" style="font-size: 0.8125rem; margin-top: 0.25rem;">{{ $message }}</div>@enderror
                     </div>
 
-                    <div class="field">
+                    <div class="field" id="card-number-field">
                         <label for="card_number">Card number</label>
-                        <input id="card_number" type="text" name="card_number" value="{{ old('card_number') }}" required inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="23">
+                        <input id="card_number" type="text" name="card_number" value="{{ old('card_number') }}" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="23">
                         <div class="muted" style="font-size: 0.75rem; margin-top: 0.25rem;">Only the last 4 digits are stored.</div>
                         @error('card_number')<div class="text-danger" style="font-size: 0.8125rem; margin-top: 0.25rem;">{{ $message }}</div>@enderror
                     </div>
 
-                    <div class="field">
+                    <div class="field" id="card-expiry-field">
                         <label>Expiry date</label>
                         <div class="d-flex gap-2">
                             <select name="expiry_month" required aria-label="Expiry month" style="flex: 1;">
@@ -104,4 +122,29 @@
             </div>
         </div>
     </div>
+
+    <script>
+    (function () {
+        var typeSelect = document.getElementById('type');
+        var cardFields = ['card-fields', 'card-number-field', 'card-expiry-field'];
+
+        function toggleCardFields() {
+            var isCard = typeSelect.value === 'card';
+            cardFields.forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    el.style.display = isCard ? '' : 'none';
+                    el.querySelectorAll('input, select').forEach(function (input) {
+                        input.required = isCard && input.name !== 'is_default';
+                    });
+                }
+            });
+            var brandSelect = document.getElementById('brand');
+            if (brandSelect) brandSelect.required = isCard;
+        }
+
+        typeSelect.addEventListener('change', toggleCardFields);
+        toggleCardFields();
+    })();
+    </script>
 @endsection

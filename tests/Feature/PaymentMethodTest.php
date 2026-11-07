@@ -31,6 +31,7 @@ class PaymentMethodTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/payment-methods', [
+            'type' => 'card',
             'brand' => 'visa',
             'cardholder_name' => 'Test User',
             'card_number' => '4242424242424242',
@@ -52,6 +53,7 @@ class PaymentMethodTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)->post('/payment-methods', [
+            'type' => 'card',
             'brand' => 'mastercard',
             'cardholder_name' => 'Test User',
             'card_number' => '5555555555554444',
@@ -69,6 +71,7 @@ class PaymentMethodTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/payment-methods', [
+            'type' => 'card',
             'brand' => 'visa',
             'cardholder_name' => 'Test User',
             'card_number' => '123',
@@ -77,6 +80,36 @@ class PaymentMethodTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('card_number');
+    }
+
+    public function test_user_can_add_paystack_and_opay_payment_methods(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/payment-methods', [
+            'type' => 'paystack',
+            'cardholder_name' => 'Test User',
+        ]);
+
+        $this->actingAs($user)->post('/payment-methods', [
+            'type' => 'opay',
+            'cardholder_name' => 'Test User',
+        ]);
+
+        $this->assertDatabaseHas('payment_methods', ['user_id' => $user->id, 'type' => 'paystack', 'last4' => '----']);
+        $this->assertDatabaseHas('payment_methods', ['user_id' => $user->id, 'type' => 'opay', 'last4' => '----']);
+    }
+
+    public function test_card_fields_are_required_only_for_card_type(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post('/payment-methods', [
+            'type' => 'card',
+            'cardholder_name' => 'Test User',
+        ]);
+
+        $response->assertSessionHasErrors(['card_number', 'expiry_month', 'expiry_year']);
     }
 
     public function test_user_can_remove_their_payment_method(): void
