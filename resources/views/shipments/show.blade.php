@@ -57,6 +57,8 @@
                         <div class="col-sm-6"><div class="text-secondary small">Amount</div><div class="fw-semibold">₦{{ number_format($shipment->amount) }}</div></div>
                         <div class="col-sm-6"><div class="text-secondary small">Shipped</div><div class="fw-semibold">{{ $shipment->shipped_at?->format('M j, Y') ?? '—' }}</div></div>
                         <div class="col-sm-6"><div class="text-secondary small">Delivered</div><div class="fw-semibold">{{ $shipment->delivered_at?->format('M j, Y') ?? '—' }}</div></div>
+                        <div class="col-sm-6"><div class="text-secondary small">Vehicle</div><div class="fw-semibold">{{ $shipment->vehicle?->name ?? 'Unassigned' }}</div></div>
+                        <div class="col-sm-6"><div class="text-secondary small">Payments</div><div class="fw-semibold">{{ $shipment->payments->where('status', 'paid')->count() }} paid</div></div>
                     </div>
                 </div>
             </div>
@@ -92,6 +94,34 @@
                     </form>
                 </div>
             </div>
+
+            @php $methods = auth()->user()->paymentMethods; @endphp
+            @if ($methods->isNotEmpty() && $shipment->payments->where('status', 'paid')->isEmpty())
+                <div class="card panel mb-3">
+                    <div class="card-body p-4">
+                        <h2 class="h6 mb-3 fw-bold">Pay invoice</h2>
+                        <form method="POST" action="{{ route('shipments.pay', $shipment) }}">
+                            @csrf
+                            <select name="payment_method_id" class="form-select mb-3" required>
+                                @foreach ($methods as $m)
+                                    <option value="{{ $m->id }}">
+                                        {{ $m->type === 'card' ? ucfirst($m->brand) . ' •••• ' . $m->last4 : ucfirst($m->type) }}
+                                        {{ $m->is_default ? '(default)' : '' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-success w-100">Pay ₦{{ number_format($shipment->amount) }}</button>
+                        </form>
+                    </div>
+                </div>
+            @elseif ($shipment->payments->where('status', 'paid')->isNotEmpty())
+                <div class="card panel mb-3">
+                    <div class="card-body p-4">
+                        <h2 class="h6 mb-2 fw-bold text-success">✓ Paid</h2>
+                        <p class="text-secondary small mb-0">{{ $shipment->payments->where('status', 'paid')->count() }} payment(s) totaling ₦{{ number_format($shipment->payments->where('status', 'paid')->sum('amount')) }}</p>
+                    </div>
+                </div>
+            @endif
 
             <div class="card panel">
                 <div class="card-body p-4">

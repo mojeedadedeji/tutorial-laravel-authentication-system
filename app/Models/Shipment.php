@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['user_id', 'reference', 'origin', 'destination', 'status', 'weight_kg', 'amount', 'shipped_at', 'delivered_at'])]
+#[Fillable(['user_id', 'vehicle_id', 'reference', 'origin', 'destination', 'status', 'weight_kg', 'amount', 'shipped_at', 'delivered_at'])]
 class Shipment extends Model
 {
     /** @use HasFactory<\Database\Factories\ShipmentFactory> */
@@ -21,6 +22,22 @@ class Shipment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the vehicle assigned to this shipment.
+     */
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    /**
+     * Get the payments for this shipment.
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     /**

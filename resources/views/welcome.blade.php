@@ -180,6 +180,7 @@
                 <li class="nav-item"><a class="nav-link nav-link-custom" href="#services">Services</a></li>
                 <li class="nav-item"><a class="nav-link nav-link-custom" href="#how">How it works</a></li>
                 <li class="nav-item"><a class="nav-link nav-link-custom" href="#contact">Contact</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-custom" href="{{ route('blog.index') }}">Blog</a></li>
                 @auth
                     <li class="nav-item"><a class="btn btn-quote btn-sm px-3" href="{{ route('dashboard') }}">Dashboard</a></li>
                 @else

@@ -206,6 +206,27 @@
             <a href="{{ route('payment-methods.index') }}" @if (request()->routeIs('payment-methods.*')) aria-current="page" @endif>
                 <span class="nav-icon" aria-hidden="true">💳</span> Payment methods
             </a>
+            <a href="{{ route('blog.index') }}" target="_blank" rel="noopener">
+                <span class="nav-icon" aria-hidden="true">📰</span> Blog
+            </a>
+            @if (auth()->user()->isAdmin())
+                <div class="nav-section">Admin</div>
+                <a href="{{ route('admin.dashboard') }}" @if (request()->routeIs('admin.dashboard')) aria-current="page" @endif>
+                    <span class="nav-icon" aria-hidden="true">⚙</span> Admin dashboard
+                </a>
+                <a href="{{ route('admin.shipments') }}" @if (request()->routeIs('admin.shipments')) aria-current="page" @endif>
+                    <span class="nav-icon" aria-hidden="true">📦</span> All shipments
+                </a>
+                <a href="{{ route('admin.users') }}" @if (request()->routeIs('admin.users')) aria-current="page" @endif>
+                    <span class="nav-icon" aria-hidden="true">👥</span> Users
+                </a>
+                <a href="{{ route('admin.vehicles.index') }}" @if (request()->routeIs('admin.vehicles.*')) aria-current="page" @endif>
+                    <span class="nav-icon" aria-hidden="true">🚛</span> Fleet
+                </a>
+                <a href="{{ route('admin.posts.index') }}" @if (request()->routeIs('admin.posts.*')) aria-current="page" @endif>
+                    <span class="nav-icon" aria-hidden="true">✍️</span> Blog posts
+                </a>
+            @endif
             <a href="{{ route('account.delete') }}" class="nav-danger" @if (request()->routeIs('account.delete')) aria-current="page" @endif>
                 <span class="nav-icon" aria-hidden="true">✕</span> Delete account
             </a>

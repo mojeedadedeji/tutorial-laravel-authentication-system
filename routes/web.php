@@ -1,16 +1,20 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +29,12 @@ Route::get('quote', [QuoteController::class, 'create'])
 
 Route::post('quote', [QuoteController::class, 'calculate'])
     ->name('quote.calculate');
+
+Route::get('blog', [PostController::class, 'index'])
+    ->name('blog.index');
+
+Route::get('blog/{slug}', [PostController::class, 'show'])
+    ->name('blog.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -91,6 +101,9 @@ Route::middleware('auth')->group(function () {
     Route::get('shipments/{shipment}/invoice', [ShipmentController::class, 'invoice'])
         ->name('shipments.invoice');
 
+    Route::post('shipments/{shipment}/pay', [PaymentController::class, 'store'])
+        ->name('shipments.pay');
+
     Route::get('profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
@@ -126,3 +139,20 @@ Route::middleware('auth')->group(function () {
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('shipments', [AdminController::class, 'shipments'])->name('shipments');
+    Route::patch('shipments/{shipment}/status', [AdminController::class, 'updateShipmentStatus'])->name('shipments.status');
+    Route::get('users', [AdminController::class, 'users'])->name('users');
+    Route::patch('users/{user}/toggle-admin', [AdminController::class, 'toggleAdmin'])->name('users.toggle-admin');
+
+    Route::resource('vehicles', VehicleController::class)->except(['show']);
+
+    Route::get('posts', [PostController::class, 'adminIndex'])->name('posts.index');
+    Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+});
