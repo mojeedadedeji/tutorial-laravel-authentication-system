@@ -34,6 +34,51 @@
             position: relative;
             overflow: hidden;
         }
+        .hero { position: relative; overflow: hidden; }
+        .hero-img-wrap { position: relative; }
+        .hero-img {
+            width: 100%;
+            border-radius: 1.25rem;
+            box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+            border: 1px solid rgb(255 255 255 / 0.15);
+        }
+        .hero-img-badge {
+            position: absolute;
+            bottom: -1.25rem; left: -1.25rem;
+            background: #fff; color: var(--navy);
+            border-radius: 0.875rem;
+            padding: 0.875rem 1.25rem;
+            box-shadow: 0 12px 32px rgb(0 0 0 / 0.2);
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .hero-img-badge .pulse {
+            width: 0.625rem; height: 0.625rem; border-radius: 50%;
+            background: #16a34a;
+            box-shadow: 0 0 0 0 rgba(22,163,74,0.5);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(22,163,74,0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(22,163,74,0); }
+            100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
+        }
+        .fleet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .fleet-item { position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 4 / 3; }
+        .fleet-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .fleet-item:hover img { transform: scale(1.06); }
+        .fleet-item .fleet-label {
+            position: absolute; inset: auto 0 0 0;
+            padding: 2.5rem 1rem 0.875rem;
+            background: linear-gradient(transparent, rgb(11 31 58 / 0.85));
+            color: #fff; font-weight: 600; font-size: 0.875rem;
+        }
+        @media (max-width: 991.98px) {
+            .fleet-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-img-badge { left: 0; }
+        }
+        @media (max-width: 575.98px) {
+            .fleet-grid { grid-template-columns: 1fr; }
+        }
         .hero::after {
             content: "";
             position: absolute; inset: auto 0 0 0; height: 6rem;
@@ -131,22 +176,38 @@
 
 <header class="hero">
     <div class="container position-relative">
-        <span class="hero-badge">● Trusted by 500+ businesses across West Africa</span>
-        <h1>Moving freight,<br>building futures.</h1>
-        <p class="lead mt-3">5050 Logistics Limited delivers dependable freight, warehousing and last-mile logistics — with real-time tracking and a fleet you can count on.</p>
-        <div class="d-flex gap-3 flex-wrap mt-4">
-            @auth
-                <a href="{{ route('dashboard') }}" class="btn btn-quote btn-lg px-4">Go to dashboard</a>
-            @else
-                <a href="{{ route('register') }}" class="btn btn-quote btn-lg px-4">Get a quote</a>
-                <a href="#services" class="btn btn-outline-light-custom btn-lg px-4">Our services</a>
-            @endauth
-        </div>
-        <div class="hero-stats">
-            <div class="hero-stat"><div class="num">48K+</div><div class="lbl">Shipments / month</div></div>
-            <div class="hero-stat"><div class="num">96%</div><div class="lbl">On-time delivery</div></div>
-            <div class="hero-stat"><div class="num">120+</div><div class="lbl">Fleet vehicles</div></div>
-            <div class="hero-stat"><div class="num">15</div><div class="lbl">Years experience</div></div>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="hero-badge">● Trusted by 500+ businesses across West Africa</span>
+                <h1>Moving freight,<br>building futures.</h1>
+                <p class="lead mt-3">5050 Logistics Limited delivers dependable freight, warehousing and last-mile logistics — with real-time tracking and a fleet you can count on.</p>
+                <div class="d-flex gap-3 flex-wrap mt-4">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="btn btn-quote btn-lg px-4">Go to dashboard</a>
+                    @else
+                        <a href="{{ route('register') }}" class="btn btn-quote btn-lg px-4">Get a quote</a>
+                        <a href="#services" class="btn btn-outline-light-custom btn-lg px-4">Our services</a>
+                    @endauth
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat"><div class="num">48K+</div><div class="lbl">Shipments / month</div></div>
+                    <div class="hero-stat"><div class="num">96%</div><div class="lbl">On-time delivery</div></div>
+                    <div class="hero-stat"><div class="num">120+</div><div class="lbl">Fleet vehicles</div></div>
+                    <div class="hero-stat"><div class="num">15</div><div class="lbl">Years experience</div></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-img-wrap">
+                    <img src="{{ asset('img/truck-highway.jpg') }}" alt="5050 Logistics truck on the highway" class="hero-img">
+                    <div class="hero-img-badge">
+                        <span class="pulse"></span>
+                        <div>
+                            <div class="fw-bold" style="font-size: 0.875rem; line-height: 1.2;">Live tracking</div>
+                            <div style="font-size: 0.75rem; color: #6b7280;">Shipment #NG-2481 en route</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </header>
@@ -215,6 +276,37 @@
                 <span class="step-num">3</span>
                 <h5 class="fw-bold mt-2">Track &amp; confirm</h5>
                 <p class="text-secondary small">Monitor deliveries in real time and receive digital proof of delivery on completion.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section bg-light">
+    <div class="container">
+        <div class="row align-items-end mb-5">
+            <div class="col-lg-7">
+                <h2 class="section-title">Our fleet in action</h2>
+            </div>
+            <div class="col-lg-5">
+                <p class="section-sub mb-0">From tipper trucks and haulage vehicles to bonded warehouses and delivery vans — every link covered.</p>
+            </div>
+        </div>
+        <div class="fleet-grid">
+            <div class="fleet-item">
+                <img src="{{ asset('img/tipper-truck.jpg') }}" alt="Tipper truck" loading="lazy">
+                <div class="fleet-label">Tipper &amp; dump trucks</div>
+            </div>
+            <div class="fleet-item">
+                <img src="{{ asset('img/truck-highway.jpg') }}" alt="Haulage truck on highway" loading="lazy">
+                <div class="fleet-label">Long-haul freight</div>
+            </div>
+            <div class="fleet-item">
+                <img src="{{ asset('img/warehouse.jpg') }}" alt="Logistics warehouse" loading="lazy">
+                <div class="fleet-label">Warehousing &amp; cross-dock</div>
+            </div>
+            <div class="fleet-item">
+                <img src="{{ asset('img/delivery-van.jpg') }}" alt="Delivery van" loading="lazy">
+                <div class="fleet-label">Last-mile delivery</div>
             </div>
         </div>
     </div>
