@@ -19,6 +19,7 @@
             <p class="text-secondary mb-0">{{ $shipments->total() }} shipment{{ $shipments->total() === 1 ? '' : 's' }} found</p>
         </div>
         <div class="d-flex gap-2">
+            <a href="{{ route('shipments.export') }}" class="btn btn-outline-primary btn-sm">⬇ Export CSV</a>
             <a href="{{ route('shipments.create') }}" class="btn btn-primary btn-sm">+ New shipment</a>
             <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm">← Dashboard</a>
         </div>
@@ -89,7 +90,7 @@
                 <tbody>
                     @forelse ($shipments as $shipment)
                         <tr>
-                            <td class="fw-semibold">{{ $shipment->reference }}</td>
+                            <td><a href="{{ route('shipments.show', $shipment) }}" class="fw-semibold text-decoration-none">{{ $shipment->reference }}</a></td>
                             <td>{{ $shipment->origin }} → {{ $shipment->destination }}</td>
                             <td><span class="status-badge status-{{ $shipment->status }}">{{ ucfirst(str_replace('_', ' ', $shipment->status)) }}</span></td>
                             <td class="text-end">{{ $shipment->weight_kg ? number_format($shipment->weight_kg) . ' kg' : '—' }}</td>

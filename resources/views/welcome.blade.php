@@ -175,6 +175,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navMenu">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+                <li class="nav-item"><a class="nav-link nav-link-custom" href="{{ route('quote.create') }}">Get a quote</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-custom" href="#track">Track</a></li>
                 <li class="nav-item"><a class="nav-link nav-link-custom" href="#services">Services</a></li>
                 <li class="nav-item"><a class="nav-link nav-link-custom" href="#how">How it works</a></li>
                 <li class="nav-item"><a class="nav-link nav-link-custom" href="#contact">Contact</a></li>
@@ -343,6 +345,118 @@
     </div>
 </section>
 
+<section class="section" id="track">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card p-4 p-md-5" style="border: none; border-radius: 1.25rem; box-shadow: 0 8px 32px rgb(0 0 0 / 0.1);">
+                    <h2 class="section-title mb-1">Track your shipment</h2>
+                    <p class="section-sub mb-4">Enter your shipment reference (e.g. SHP-XXXXXX) to see live status.</p>
+                    <form method="GET" action="{{ url('/track') }}" class="d-flex gap-2" onsubmit="event.preventDefault(); var r=this.reference.value.trim(); if(r) window.location='{{ url('/track') }}/'+encodeURIComponent(r);">
+                        <input type="text" name="reference" class="form-control form-control-lg" placeholder="SHP-XXXXXX" required style="border-radius: 0.625rem;">
+                        <button type="submit" class="btn btn-quote btn-lg px-4" style="white-space: nowrap;">Track</button>
+                    </form>
+                    <p class="text-secondary small mt-3 mb-0">Don't have a reference? <a href="{{ route('quote.create') }}">Get a quote</a> or <a href="{{ route('login') }}">log in</a> to your dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section bg-light">
+    <div class="container">
+        <div class="row align-items-end mb-5">
+            <div class="col-lg-7">
+                <h2 class="section-title">What our clients say</h2>
+            </div>
+            <div class="col-lg-5">
+                <p class="section-sub mb-0">Trusted by businesses and individuals across Nigeria.</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card service-card p-4 h-100">
+                    <div class="text-warning mb-2">★★★★★</div>
+                    <p class="mb-3">"Our Lagos–Abuja shipments used to take a week of phone calls. With 5050 Logistics we track everything from the dashboard — delivered in 2 days, every time."</p>
+                    <div class="fw-semibold">Adaeze Okafor</div>
+                    <div class="text-secondary small">Procurement Manager, FMCG brand</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card service-card p-4 h-100">
+                    <div class="text-warning mb-2">★★★★★</div>
+                    <p class="mb-3">"The tipper trucks are reliable and the drivers are professional. Construction materials reach site on schedule — our projects stay on budget."</p>
+                    <div class="fw-semibold">Ibrahim Musa</div>
+                    <div class="text-secondary small">Site Engineer, Abuja</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card service-card p-4 h-100">
+                    <div class="text-warning mb-2">★★★★☆</div>
+                    <p class="mb-3">"Last-mile delivery to our customers in Port Harcourt is fast and the proof-of-delivery photos give us peace of mind."</p>
+                    <div class="fw-semibold">Funke Adeyemi</div>
+                    <div class="text-secondary small">E-commerce Founder, PH</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row align-items-end mb-5">
+            <div class="col-lg-7">
+                <h2 class="section-title">Coverage across Nigeria</h2>
+            </div>
+            <div class="col-lg-5">
+                <p class="section-sub mb-0">Daily routes connecting 10+ cities and growing.</p>
+            </div>
+        </div>
+        <div class="row g-3">
+            @foreach (['Lagos','Abuja','Port Harcourt','Kano','Ibadan','Enugu','Benin City','Kaduna','Ilorin','Uyo'] as $city)
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="card service-card p-3 text-center">
+                        <div class="fw-semibold">{{ $city }}</div>
+                        <div class="text-secondary small">Daily service</div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<section class="section bg-light" id="faq">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="section-title text-center mb-4">Frequently asked questions</h2>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">How do I track my shipment?</button></h3>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">Use the tracking box above with your shipment reference (SHP-XXXXXX), or log in to your dashboard for full details and status history.</div></div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">How is shipping cost calculated?</button></h3>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Cost = base fare + per-kg rate based on destination. Use our <a href="{{ route('quote.create') }}">instant quote calculator</a> for an estimate.</div></div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">What payment methods do you accept?</button></h3>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Visa, Mastercard, Verve debit/credit cards, Paystack and OPay. Save methods in your account for faster checkout.</div></div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">How long does delivery take?</button></h3>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Most lanes deliver within 1–5 days depending on distance and cargo. You'll see the estimated date on your tracking page.</div></div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">Do you offer warehousing?</button></h3>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Yes — bonded storage and cross-docking at our Lagos, Abuja and Port Harcourt hubs. Contact us for rates.</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="section">
     <div class="container">
         <div class="cta-band">
@@ -412,6 +526,9 @@
     </div>
 </footer>
 
+<a href="https://wa.me/2347066496268" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1050; width: 3.5rem; height: 3.5rem; border-radius: 50%; background: #25d366; color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgb(0 0 0 / 0.25); transition: transform 0.15s ease;">
+    <svg width="1.75rem" height="1.75rem" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+</a>
 <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}" defer></script>
 </body>
 </html>

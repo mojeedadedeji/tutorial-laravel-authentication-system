@@ -8,12 +8,23 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\ShipmentController;
+use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('track/{reference}', [TrackingController::class, 'show'])
+    ->name('tracking.show');
+
+Route::get('quote', [QuoteController::class, 'create'])
+    ->name('quote.create');
+
+Route::post('quote', [QuoteController::class, 'calculate'])
+    ->name('quote.calculate');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -58,6 +69,27 @@ Route::middleware('auth')->group(function () {
     Route::post('shipments', [ShipmentController::class, 'store'])
         ->middleware('throttle:20,1')
         ->name('shipments.store');
+
+    Route::get('shipments/export', [ShipmentController::class, 'export'])
+        ->name('shipments.export');
+
+    Route::get('shipments/{shipment}', [ShipmentController::class, 'show'])
+        ->name('shipments.show');
+
+    Route::get('shipments/{shipment}/edit', [ShipmentController::class, 'edit'])
+        ->name('shipments.edit');
+
+    Route::put('shipments/{shipment}', [ShipmentController::class, 'update'])
+        ->name('shipments.update');
+
+    Route::patch('shipments/{shipment}/status', [ShipmentController::class, 'updateStatus'])
+        ->name('shipments.status');
+
+    Route::delete('shipments/{shipment}', [ShipmentController::class, 'destroy'])
+        ->name('shipments.destroy');
+
+    Route::get('shipments/{shipment}/invoice', [ShipmentController::class, 'invoice'])
+        ->name('shipments.invoice');
 
     Route::get('profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
