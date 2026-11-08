@@ -30,6 +30,11 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+            \Illuminate\Support\Facades\Log::warning('Failed login attempt', [
+                'email' => $credentials['email'],
+                'ip' => $request->ip(),
+            ]);
+
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
