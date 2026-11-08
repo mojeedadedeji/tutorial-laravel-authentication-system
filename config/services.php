@@ -27,6 +27,11 @@ return [
         'secret' => env('PAYSTACK_SECRET_KEY'),
     ],
 
+    'termii' => [
+        'api_key' => env('TERMII_API_KEY'),
+        'sender_id' => env('TERMII_SENDER_ID', 'N-Alert'),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

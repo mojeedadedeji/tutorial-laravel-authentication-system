@@ -18,6 +18,12 @@
         </div>
 
         <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required autocomplete="tel" placeholder="e.g. 08012345678">
+            <small style="color:#6b7280;">We'll send a verification code to this number.</small>
+        </div>
+
+        <div class="field">
             <label for="password">Password</label>
             <div class="pw-wrap">
                 <input id="password" type="password" name="password" required autocomplete="new-password">
