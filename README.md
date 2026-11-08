@@ -2,6 +2,8 @@
 
 A full-stack shipment management platform for **5050 Logistics Limited** — a logistics company moving freight across Nigeria and beyond. Built with Laravel 13, PHP 8.4, MySQL, and Bootstrap 5.
 
+**Live:** https://fiftyfiftylogistics.com
+
 ## Features
 
 ### Public site
