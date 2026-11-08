@@ -35,17 +35,19 @@ class SmsService
             return;
         }
 
-        $response = Http::asForm()->post('https://v3.api.termii.com/api/sms/send', [
+        $response = Http::acceptJson()->post('https://v3.api.termii.com/api/sms/send', [
             'api_key' => $this->apiKey,
             'to' => $phone,
             'from' => $this->senderId,
             'sms' => $message,
             'type' => 'plain',
             'channel' => 'generic',
-        ])->throw()->json();
+        ]);
 
-        if (($response['code'] ?? null) !== 'ok') {
-            throw new \RuntimeException($response['message'] ?? 'SMS delivery failed.');
+        $body = $response->json() ?? [];
+
+        if (! $response->successful() || ($body['code'] ?? null) !== 'ok') {
+            throw new \RuntimeException($body['message'] ?? 'SMS delivery failed.');
         }
     }
 
