@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
 # 5050 Logistics — one-command VPS deployment
-# Target: Ubuntu 24.04, domain fifyfifylogistics.com
+# Target: Ubuntu 24.04, domain fiftyfiftylogistics.tech
 # Usage: bash deploy.sh
 #
 set -euo pipefail
 
 APP_DIR=/var/www/5050
-DOMAIN=fifyfifylogistics.com
+DOMAIN=fiftyfiftylogistics.tech
 DB_NAME=laravel_auth_prod
 DB_USER=laravel
 DB_PASS="${DB_PASSWORD:?Set DB_PASSWORD env var before running}"
