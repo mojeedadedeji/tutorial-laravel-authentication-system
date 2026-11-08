@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
 # 5050 Logistics — one-command VPS deployment
-# Target: Ubuntu 24.04, domain fiftyfiftylogistics.tech
+# Target: Ubuntu 24.04, domain fiftyfiftylogistics.com
 # Usage: bash deploy.sh
 #
 set -euo pipefail
 
 APP_DIR=/var/www/5050
-DOMAIN=fiftyfiftylogistics.tech
+DOMAIN=fiftyfiftylogistics.com
 DB_NAME=laravel_auth_prod
 DB_USER=laravel
 DB_PASS="${DB_PASSWORD:?Set DB_PASSWORD env var before running}"
@@ -52,7 +52,7 @@ sed -i "s|^APP_DEBUG=.*|APP_DEBUG=false|" .env
 sed -i "s|^APP_URL=.*|APP_URL=https://${DOMAIN}|" .env
 sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${DB_NAME}|" .env
 sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${DB_USER}|" .env
-sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|" .env
+sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=\"${DB_PASS}\"|" .env
 sed -i "s|^DB_HOST=.*|DB_HOST=127.0.0.1|" .env
 sed -i "s|^DB_PORT=.*|DB_PORT=3306|" .env
 sed -i "s|^QUEUE_CONNECTION=.*|QUEUE_CONNECTION=database|" .env
