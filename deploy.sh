@@ -55,6 +55,7 @@ sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${DB_USER}|" .env
 sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|" .env
 sed -i "s|^DB_HOST=.*|DB_HOST=127.0.0.1|" .env
 sed -i "s|^DB_PORT=.*|DB_PORT=3306|" .env
+sed -i "s|^QUEUE_CONNECTION=.*|QUEUE_CONNECTION=database|" .env
 
 echo "==> Running migrations and caches"
 php artisan migrate --force
@@ -99,6 +100,24 @@ echo "==> SSL certificate"
 certbot --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --non-interactive --agree-tos -m "admin@${DOMAIN}" || \
     echo "Certbot failed — ensure DNS A record points to this server, then run: certbot --nginx -d ${DOMAIN} -d www.${DOMAIN}"
 
+echo "==> Queue worker (systemd)"
+cat > /etc/systemd/system/laravel-worker.service <<EOF
+[Unit]
+Description=Laravel queue worker for 5050 Logistics
+After=network.target mysql.service
+
+[Service]
+User=www-data
+Group=www-data
+Restart=always
+ExecStart=/usr/bin/php ${APP_DIR}/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+systemctl enable --now laravel-worker
+
 echo "==> Scheduler cron"
 (crontab -l 2>/dev/null | grep -v 'artisan schedule:run' || true; \
  echo "* * * * * cd ${APP_DIR} && php artisan schedule:run >> /dev/null 2>&1") | crontab -
@@ -111,5 +130,5 @@ echo ""
 echo " NEXT STEPS:"
 echo " 1. Edit ${APP_DIR}/.env — set MAIL_*, PAYSTACK_* keys"
 echo " 2. php artisan config:cache   (after editing .env)"
-echo " 3. Set up queue worker for notifications (see DEPLOYMENT.md)"
+echo " 3. Queue worker 'laravel-worker' is running (systemctl status laravel-worker)"
 echo "=============================================="
