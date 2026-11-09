@@ -53,22 +53,28 @@
 
             <h2 class="h6 fw-bold mb-3">Tracking timeline</h2>
             @php
-                $steps = [
-                    ['label' => 'Shipment created', 'done' => true, 'at' => $shipment->created_at],
-                    ['label' => 'Picked up & shipped', 'done' => $shipment->shipped_at !== null, 'at' => $shipment->shipped_at],
-                    ['label' => 'In transit', 'done' => in_array($shipment->status, ['in_transit', 'delivered', 'delayed'], true), 'at' => $shipment->shipped_at],
-                    ['label' => 'Delivered', 'done' => $shipment->delivered_at !== null, 'at' => $shipment->delivered_at],
+                $labels = [
+                    'pending' => 'Shipment created',
+                    'in_transit' => 'In transit',
+                    'delivered' => 'Delivered',
+                    'delayed' => 'Delayed',
+                    'cancelled' => 'Cancelled',
                 ];
+                $history = $shipment->statusHistories;
             @endphp
-            @foreach ($steps as $i => $step)
+            @forelse ($history as $i => $entry)
+                @php $isLatest = $i === $history->count() - 1; @endphp
                 <div class="step">
-                    <div class="step-dot {{ $step['done'] ? 'done' : 'pending' }}">{{ $i + 1 }}</div>
+                    <div class="step-dot {{ $entry->status === 'delivered' ? 'done' : ($entry->status === 'cancelled' ? 'pending' : ($isLatest ? 'done' : 'pending')) }}">{{ $i + 1 }}</div>
                     <div>
-                        <div class="step-label">{{ $step['label'] }}</div>
-                        <div class="step-time">{{ $step['at']?->format('M j, Y g:i A') ?? 'Pending' }}</div>
+                        <div class="step-label">{{ $labels[$entry->status] ?? ucfirst(str_replace('_', ' ', $entry->status)) }}</div>
+                        <div class="step-time">{{ $entry->created_at->format('M j, Y g:i A') }}</div>
+                        @if ($entry->note)<div class="step-time fst-italic">{{ $entry->note }}</div>@endif
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <p class="text-secondary small">No tracking updates yet.</p>
+            @endforelse
 
             @if ($shipment->status === 'delayed')
                 <div class="alert alert-warning mt-3 mb-0" role="alert">

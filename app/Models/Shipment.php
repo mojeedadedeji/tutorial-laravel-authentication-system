@@ -41,6 +41,30 @@ class Shipment extends Model
     }
 
     /**
+     * Get the status history for this shipment.
+     */
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(ShipmentStatusHistory::class)->orderBy('created_at');
+    }
+
+    /**
+     * Record status history automatically on create and status change.
+     */
+    protected static function booted(): void
+    {
+        static::created(function (Shipment $shipment) {
+            $shipment->statusHistories()->create(['status' => $shipment->status]);
+        });
+
+        static::updated(function (Shipment $shipment) {
+            if ($shipment->wasChanged('status')) {
+                $shipment->statusHistories()->create(['status' => $shipment->status]);
+            }
+        });
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

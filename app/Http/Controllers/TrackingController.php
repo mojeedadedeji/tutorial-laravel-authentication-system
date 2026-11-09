@@ -12,7 +12,9 @@ class TrackingController extends Controller
      */
     public function show(string $reference): View
     {
-        $shipment = Shipment::where('reference', strtoupper($reference))->firstOrFail();
+        $shipment = Shipment::with('statusHistories')
+            ->where('reference', strtoupper($reference))
+            ->firstOrFail();
 
         return view('tracking.show', [
             'shipment' => $shipment,
