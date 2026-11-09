@@ -64,4 +64,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Listing::class);
     }
+
+    /**
+     * Get the orders this user placed as a buyer.
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'buyer_id');
+    }
+
+    /**
+     * Get the orders this user received as a seller.
+     */
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Order::class, 'seller_id');
+    }
 }

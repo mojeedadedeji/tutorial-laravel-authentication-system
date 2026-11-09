@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ListingController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PhotoController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,4 +38,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('listings/{listing}', [ListingController::class, 'update']);
     Route::patch('listings/{listing}/sold', [ListingController::class, 'markSold']);
     Route::delete('listings/{listing}', [ListingController::class, 'destroy']);
+
+    Route::post('orders', [OrderController::class, 'store'])
+        ->middleware('throttle:20,1');
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::get('orders/sales', [OrderController::class, 'sales']);
+    Route::get('orders/{order}', [OrderController::class, 'show']);
+    Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
 });
