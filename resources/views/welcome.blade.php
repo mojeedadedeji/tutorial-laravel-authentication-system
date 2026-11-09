@@ -6,6 +6,13 @@
     <title>5050 Logistics Limited — Freight &amp; Supply Chain Solutions</title>
     <meta name="description" content="5050 Logistics Limited — dependable freight, warehousing and last-mile delivery across Nigeria and beyond.">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <meta name="theme-color" content="#0b1f3a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="5050 Logistics">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192.png') }}">
     <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <style>
         :root {
@@ -208,20 +215,17 @@
                     @endauth
                 </div>
                 <div class="store-badges">
-                    <a href="#" class="store-badge" aria-label="Download on the App Store">
-                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8.98-.2 1.92-.86 3.24-.77 1.38.12 2.42.65 3.1 1.65-2.84 1.7-2.37 5.47.48 6.53-.57 1.5-1.31 2.99-2.9 4.76zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                    <button type="button" id="install-app-btn" class="store-badge" aria-label="Install the 5050 Logistics app" style="border:0;cursor:pointer;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         <span class="sb-text">
-                            <span class="sb-small">Download on the</span>
-                            <span class="sb-big">App Store</span>
+                            <span class="sb-small">Install our</span>
+                            <span class="sb-big">Mobile App</span>
                         </span>
-                    </a>
-                    <a href="#" class="store-badge" aria-label="Get it on Google Play">
-                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 1.8 13.7 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1zm11.5 8.3L5.9 1.2l11.2 6.4-1.9 2.5zm0 3.8 1.9 2.5-11.2 6.4 9.3-8.9zm2.3-1.9 3.1 1.8c.9.5.9 1.6 0 2.1l-3.1 1.8-2.2-2.9 2.2-2.8z"/></svg>
-                        <span class="sb-text">
-                            <span class="sb-small">Get it on</span>
-                            <span class="sb-big">Google Play</span>
-                        </span>
-                    </a>
+                    </button>
+                    <div id="install-hint" class="text-white-50 small mt-2" style="display:none;max-width:22rem;">
+                        <span id="install-hint-ios" style="display:none;">Tap <strong>Share</strong> then <strong>Add to Home Screen</strong> to install.</span>
+                        <span id="install-hint-android" style="display:none;">Tap the menu in your browser and choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</span>
+                    </div>
                 </div>
                 <div class="hero-stats">
                     <div class="hero-stat"><div class="num">48K+</div><div class="lbl">Shipments / month</div></div>
@@ -531,5 +535,48 @@
     <svg width="1.75rem" height="1.75rem" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
 </a>
 <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}" defer></script>
+<script>
+(function () {
+    const btn = document.getElementById('install-app-btn');
+    const hint = document.getElementById('install-hint');
+    if (!btn) return;
+
+    let deferredPrompt = null;
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
+    window.addEventListener('appinstalled', () => {
+        btn.style.display = 'none';
+        hint.style.display = 'none';
+    });
+
+    btn.addEventListener('click', async () => {
+        if (standalone) return;
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') deferredPrompt = null;
+            return;
+        }
+        hint.style.display = 'block';
+        document.getElementById(isIOS ? 'install-hint-ios' : 'install-hint-android').style.display = 'inline';
+    });
+
+    if (standalone) btn.style.display = 'none';
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('{{ asset('sw.js') }}').catch(() => {});
+    });
+}
+</script>
 </body>
 </html>
