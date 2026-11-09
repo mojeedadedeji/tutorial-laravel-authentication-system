@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ListingController;
+use App\Http\Controllers\Api\PhotoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('listings', [ListingController::class, 'store'])
         ->middleware('throttle:20,1');
+    Route::post('photos', [PhotoController::class, 'store'])
+        ->middleware('throttle:30,1');
     Route::put('listings/{listing}', [ListingController::class, 'update']);
     Route::patch('listings/{listing}/sold', [ListingController::class, 'markSold']);
     Route::delete('listings/{listing}', [ListingController::class, 'destroy']);
