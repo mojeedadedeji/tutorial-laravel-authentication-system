@@ -19,43 +19,60 @@ class OrderController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'listing_id' => ['required', 'integer', 'exists:listings,id'],
+            'listing_id' => ['nullable', 'integer', 'exists:listings,id'],
+            'listing_ids' => ['nullable', 'array', 'min:1', 'max:10'],
+            'listing_ids.*' => ['integer', 'exists:listings,id'],
             'address' => ['nullable', 'string', 'max:300'],
             'payment_method' => ['nullable', Rule::in(['simulated_card', 'cash_pickup', 'simulated'])],
             'delivery_mode' => ['nullable', Rule::in(Listing::DELIVERY_MODES)],
         ]);
 
-        $listing = Listing::with('user')->findOrFail($data['listing_id']);
+        $ids = array_values(array_unique($data['listing_ids'] ?? [$data['listing_id']]));
+        abort_if(empty($ids) || in_array(null, $ids, true), 422, 'No items selected.');
 
-        abort_if($listing->status !== 'active', 422, 'This item is no longer available.');
-        abort_if($listing->user_id === $request->user()->id, 422, 'You cannot buy your own listing.');
+        $listings = Listing::with('user')->whereIn('id', $ids)->get();
 
-        $deliveryCost = $this->deliveryCost($listing, $data['delivery_mode'] ?? null);
+        abort_if($listings->count() !== count($ids), 422, 'Some items no longer exist.');
+        abort_if($listings->contains(fn (Listing $l) => $l->status !== 'active'), 422, 'Some items are no longer available.');
+        abort_if($listings->pluck('user_id')->unique()->count() > 1, 422, 'Bundle items must be from the same seller.');
+        abort_if($listings->contains(fn (Listing $l) => $l->user_id === $request->user()->id), 422, 'You cannot buy your own listing.');
+
+        $first = $listings->first();
+        $isBundle = $listings->count() > 1;
+        $itemsTotal = $listings->sum('price');
+        $deliveryCost = $this->deliveryCost($first, $data['delivery_mode'] ?? null);
         $fee = Order::PROTO_FEE;
 
         $order = Order::create([
             'buyer_id' => $request->user()->id,
-            'listing_id' => $listing->id,
-            'seller_id' => $listing->user_id,
-            'title' => $listing->title,
-            'price' => $listing->price,
+            'listing_id' => $first->id,
+            'seller_id' => $first->user_id,
+            'title' => $isBundle ? 'Bundle ('.$listings->count().' items)' : $first->title,
+            'price' => $itemsTotal,
             'delivery_cost' => $deliveryCost,
             'fee' => $fee,
-            'total' => $listing->price + $deliveryCost + $fee,
+            'total' => $itemsTotal + $deliveryCost + $fee,
             'address' => $data['address'] ?? null,
             'payment_method' => $data['payment_method'] ?? 'simulated',
             'status' => 'awaiting_dispatch',
             'status_history' => [[
                 'status' => 'awaiting_dispatch',
                 'time' => now()->toIso8601String(),
-                'note' => 'Order placed (simulated — no real payment)',
+                'note' => ($isBundle ? 'Bundle order placed' : 'Order placed').' (simulated — no real payment)',
             ]],
         ]);
 
-        $listing->update(['status' => 'sold']);
+        foreach ($listings as $listing) {
+            $order->items()->create([
+                'listing_id' => $listing->id,
+                'title' => $listing->title,
+                'price' => $listing->price,
+            ]);
+            $listing->update(['status' => 'sold']);
+        }
 
         return response()->json([
-            'order' => $this->payload($order->fresh(['buyer', 'seller', 'listing'])),
+            'order' => $this->payload($order->fresh(['buyer', 'seller', 'listing', 'items'])),
         ], 201);
     }
 
@@ -66,7 +83,7 @@ class OrderController extends Controller
     {
         $orders = $request->user()
             ->orders()
-            ->with(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos'])
+            ->with(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos', 'items'])
             ->latest()
             ->get()
             ->map(fn (Order $o) => $this->payload($o, 'buyer'));
@@ -80,7 +97,7 @@ class OrderController extends Controller
     public function sales(Request $request): JsonResponse
     {
         $orders = Order::where('seller_id', $request->user()->id)
-            ->with(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos'])
+            ->with(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos', 'items'])
             ->latest()
             ->get()
             ->map(fn (Order $o) => $this->payload($o, 'seller'));
@@ -96,7 +113,7 @@ class OrderController extends Controller
         $user = $request->user();
         abort_unless($order->buyer_id === $user->id || $order->seller_id === $user->id, 403);
 
-        $order->load(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos']);
+        $order->load(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos', 'items']);
 
         $role = $order->buyer_id === $user->id && $order->seller_id === $user->id
             ? 'both'
@@ -150,7 +167,7 @@ class OrderController extends Controller
             $order->listing->update(['status' => 'active']);
         }
 
-        $order->load(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos']);
+        $order->load(['buyer:id,name,location', 'seller:id,name,location', 'listing:id,title,photos', 'items']);
         $role = $order->buyer_id === $user->id ? 'buyer' : 'seller';
 
         return response()->json(['order' => $this->payload($order, $role)]);
@@ -191,6 +208,12 @@ class OrderController extends Controller
                 'title' => $order->listing->title,
                 'photos' => $order->listing->photos ?? [],
             ] : null,
+            'is_bundle' => $order->items->count() > 1,
+            'items' => $order->items->map(fn ($i) => [
+                'listing_id' => $i->listing_id,
+                'title' => $i->title,
+                'price' => $i->price,
+            ])->values()->all(),
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PhotoController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\SavedSearchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,8 @@ Route::post('auth/verify-email', [AuthController::class, 'verifyEmail'])
     ->middleware('throttle:20,1');
 
 Route::get('listings', [ListingController::class, 'index']);
+Route::get('listings/mine', [ListingController::class, 'mine'])
+    ->middleware('auth:sanctum');
 Route::get('listings/{listing}', [ListingController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -40,7 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('notifications', [NotificationController::class, 'index']);
     Route::post('notifications/read-all', [NotificationController::class, 'readAll']);
 
-    Route::get('listings/mine', [ListingController::class, 'mine']);
     Route::post('listings', [ListingController::class, 'store'])
         ->middleware('throttle:20,1');
     Route::post('photos', [PhotoController::class, 'store'])
@@ -74,5 +76,10 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('throttle:10,1');
 
     Route::get('disputes', [DisputeController::class, 'index']);
+
+    Route::get('saved-searches', [SavedSearchController::class, 'index']);
+    Route::post('saved-searches', [SavedSearchController::class, 'store'])
+        ->middleware('throttle:20,1');
+    Route::delete('saved-searches/{savedSearch}', [SavedSearchController::class, 'destroy']);
     Route::post('disputes/{dispute}/close', [DisputeController::class, 'close']);
 });

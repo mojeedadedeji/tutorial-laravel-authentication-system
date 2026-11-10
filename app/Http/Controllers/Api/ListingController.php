@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Listing;
+use App\Models\SavedSearch;
+use App\Notifications\SavedSearchMatch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -60,6 +62,8 @@ class ListingController extends Controller
         $listing = Listing::create($data);
         $listing->load('user:id,name,location');
 
+        $this->notifySavedSearches($listing);
+
         return response()->json(['listing' => $this->payload($listing)], 201);
     }
 
@@ -113,6 +117,22 @@ class ListingController extends Controller
             ->map(fn (Listing $l) => $this->payload($l));
 
         return response()->json(['listings' => $listings]);
+    }
+
+    /**
+     * Notify users whose saved searches match a new listing.
+     */
+    private function notifySavedSearches(Listing $listing): void
+    {
+        SavedSearch::where('notify', true)
+            ->where('user_id', '!=', $listing->user_id)
+            ->with('user')
+            ->get()
+            ->each(function (SavedSearch $search) use ($listing) {
+                if ($search->matches($listing)) {
+                    $search->user?->notify(new SavedSearchMatch($listing, $search->name));
+                }
+            });
     }
 
     private function validated(Request $request, bool $partial = false): array
