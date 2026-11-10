@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Listing;
 use App\Models\Order;
+use App\Notifications\OrderStatusChanged;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -139,6 +140,10 @@ class OrderController extends Controller
         abort_unless($order->canTransitionTo($target), 422, 'Invalid status transition.');
 
         $order->recordTransition($target, $data['note'] ?? null);
+
+        // Notify the counterparty of the status change.
+        $counterparty = $isBuyer && ! $isSeller ? $order->seller : ($isSeller && ! $isBuyer ? $order->buyer : null);
+        $counterparty?->notify(new OrderStatusChanged($order, $target));
 
         // Keep listing status in sync: cancelled orders free the listing again.
         if ($target === 'cancelled' && $order->listing) {

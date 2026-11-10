@@ -80,4 +80,28 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'seller_id');
     }
+
+    /**
+     * Get the offers this user made as a buyer.
+     */
+    public function offersMade(): HasMany
+    {
+        return $this->hasMany(Offer::class, 'buyer_id');
+    }
+
+    /**
+     * Get the offers received on this user's listings.
+     */
+    public function offersReceived(): HasMany
+    {
+        return $this->hasMany(Offer::class, 'seller_id');
+    }
+
+    /**
+     * Get the reviews this user received.
+     */
+    public function reviewsReceived(): HasMany
+    {
+        return $this->hasMany(Review::class, 'reviewee_id');
+    }
 }
