@@ -25,7 +25,7 @@ return [
     'allowed_origins_patterns' => [
         '#^https://([a-z0-9-]+\.)?netlify\.app$#',
         '#^https://declutter-ng\.[a-z0-9.-]+#',
-        '#^https://(www\.)?declutternigeria\.ng$',
+        '#^https://(www\.)?declutternigeria\.ng$#',
     ],
 
     'allowed_headers' => ['*'],
