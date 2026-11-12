@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable([
     'buyer_id', 'listing_id', 'seller_id', 'title', 'price',
     'delivery_cost', 'fee', 'total', 'address', 'payment_method',
+    'payment_status', 'paystack_reference', 'paid_at',
     'status', 'status_history',
 ])]
 class Order extends Model
@@ -26,6 +27,8 @@ class Order extends Model
 
     /** Prototype fee assumption — clearly labelled, not a real charge. */
     public const PROTO_FEE = 500;
+
+    public const PAYMENT_STATUSES = ['unpaid', 'paid', 'pay_on_delivery', 'simulated', 'refunded'];
 
     public function buyer(): BelongsTo
     {
@@ -78,6 +81,7 @@ class Order extends Model
             'fee' => 'integer',
             'total' => 'integer',
             'status_history' => 'array',
+            'paid_at' => 'datetime',
         ];
     }
 }

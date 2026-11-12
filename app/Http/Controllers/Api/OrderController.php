@@ -23,7 +23,7 @@ class OrderController extends Controller
             'listing_ids' => ['nullable', 'array', 'min:1', 'max:10'],
             'listing_ids.*' => ['integer', 'exists:listings,id'],
             'address' => ['nullable', 'string', 'max:300'],
-            'payment_method' => ['nullable', Rule::in(['simulated_card', 'cash_pickup', 'simulated'])],
+            'payment_method' => ['nullable', Rule::in(['simulated_card', 'cash_pickup', 'simulated', 'paystack'])],
             'delivery_mode' => ['nullable', Rule::in(Listing::DELIVERY_MODES)],
         ]);
 
@@ -43,6 +43,13 @@ class OrderController extends Controller
         $deliveryCost = $this->deliveryCost($first, $data['delivery_mode'] ?? null);
         $fee = Order::PROTO_FEE;
 
+        $paymentMethod = $data['payment_method'] ?? 'simulated';
+        $paymentStatus = match ($paymentMethod) {
+            'paystack' => 'unpaid',
+            'cash_pickup' => 'pay_on_delivery',
+            default => 'simulated',
+        };
+
         $order = Order::create([
             'buyer_id' => $request->user()->id,
             'listing_id' => $first->id,
@@ -53,7 +60,8 @@ class OrderController extends Controller
             'fee' => $fee,
             'total' => $itemsTotal + $deliveryCost + $fee,
             'address' => $data['address'] ?? null,
-            'payment_method' => $data['payment_method'] ?? 'simulated',
+            'payment_method' => $paymentMethod,
+            'payment_status' => $paymentStatus,
             'status' => 'awaiting_dispatch',
             'status_history' => [[
                 'status' => 'awaiting_dispatch',
@@ -197,7 +205,8 @@ class OrderController extends Controller
             'status' => $order->status,
             'address' => $order->address,
             'payment_method' => $order->payment_method,
-            'simulated' => true,
+            'payment_status' => $order->payment_status,
+            'simulated' => $order->payment_status === 'simulated',
             'role' => $role,
             'created_at' => $order->created_at?->toIso8601String(),
             'history' => $order->status_history ?? [],

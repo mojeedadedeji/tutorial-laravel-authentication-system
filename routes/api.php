@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\OrderPaymentController;
 use App\Http\Controllers\Api\PhotoController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SavedSearchController;
@@ -28,6 +29,9 @@ Route::post('auth/login', [AuthController::class, 'login'])
 
 Route::post('auth/verify-email', [AuthController::class, 'verifyEmail'])
     ->middleware('throttle:20,1');
+
+Route::post('webhooks/paystack', [OrderPaymentController::class, 'webhook'])
+    ->middleware('throttle:60,1');
 
 Route::get('listings', [ListingController::class, 'index']);
 Route::get('listings/mine', [ListingController::class, 'mine'])
@@ -72,6 +76,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('orders/sales', [OrderController::class, 'sales']);
     Route::get('orders/{order}', [OrderController::class, 'show']);
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
+    Route::post('orders/{order}/pay', [OrderPaymentController::class, 'initialize'])
+        ->middleware('throttle:10,1');
+    Route::post('orders/{order}/verify-payment', [OrderPaymentController::class, 'verify'])
+        ->middleware('throttle:20,1');
     Route::post('orders/{order}/dispute', [DisputeController::class, 'store'])
         ->middleware('throttle:10,1');
 
