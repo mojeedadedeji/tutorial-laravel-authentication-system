@@ -12,7 +12,8 @@ class PhotoController extends Controller
 {
     /**
      * Upload a listing photo. Returns a public URL the client stores
-     * in the listing's photos array.
+     * in the listing's photos array. Uses the default filesystem disk —
+     * S3/R2 object storage in production, local disk in development.
      */
     public function store(Request $request): JsonResponse
     {
@@ -21,10 +22,11 @@ class PhotoController extends Controller
         ]);
 
         $file = $data['photo'];
-        $path = $file->store('listings', 'public');
+        $disk = (string) config('filesystems.default', 'local');
+        $path = $file->store('listings', $disk);
 
         return response()->json([
-            'url' => asset('storage/'.$path),
+            'url' => Storage::disk($disk)->url($path),
             'path' => $path,
         ], 201);
     }
