@@ -41,7 +41,7 @@ class OrderController extends Controller
         $isBundle = $listings->count() > 1;
         $itemsTotal = $listings->sum('price');
         $deliveryCost = $this->deliveryCost($first, $data['delivery_mode'] ?? null);
-        $fee = Order::PROTO_FEE;
+        $fee = (int) round($itemsTotal * Order::FEE_RATE);
 
         $paymentMethod = $data['payment_method'] ?? 'simulated';
         $paymentStatus = match ($paymentMethod) {

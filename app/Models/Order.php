@@ -25,8 +25,8 @@ class Order extends Model
         'refunded' => [],
     ];
 
-    /** Prototype fee assumption — clearly labelled, not a real charge. */
-    public const PROTO_FEE = 500;
+    /** Platform fee charged to the buyer — 5% of the items total. */
+    public const FEE_RATE = 0.05;
 
     public const PAYMENT_STATUSES = ['unpaid', 'paid', 'pay_on_delivery', 'simulated', 'refunded'];
 
